@@ -71,3 +71,79 @@ html.light ::-webkit-scrollbar-thumb:hover {
   transition-duration: 200ms;
   transition-timing-function: ease;
 }
+
+/* ── Dark Mode Global Overrides ── */
+html.dark {
+  color-scheme: dark;
+}
+
+html.dark body {
+  background-color: #080c14;
+  color: #cbd5e1;
+}
+
+/* Override standard bg-white components in dark mode */
+html.dark .bg-white {
+  background-color: #0d1321 !important;
+}
+
+/* Override standard bg-slate-100 components in dark mode */
+html.dark .bg-slate-100 {
+  background-color: #05070a !important;
+}
+
+/* Override standard light borders in dark mode */
+html.dark .border-slate-100, 
+html.dark .border-slate-200 {
+  border-color: #1e293b !important;
+}
+
+/* Override text colors in dark mode */
+html.dark .text-slate-900 {
+  color: #f8fafc !important;
+}
+
+html.dark .text-slate-800 {
+  color: #f1f5f9 !important;
+}
+
+html.dark .text-slate-700 {
+  color: #cbd5e1 !important;
+}
+
+html.dark .text-slate-650,
+html.dark .text-slate-600 {
+  color: #94a3b8 !important;
+}
+
+html.dark .text-slate-500 {
+  color: #64748b !important;
+}
+
+/* Form input styling overrides in dark mode */
+html.dark input.bg-white,
+html.dark select.bg-white,
+html.dark textarea.bg-white {
+  background-color: #05070a !important;
+  color: #f1f5f9 !important;
+  border-color: #1e293b !important;
+}
+
+html.dark input::placeholder,
+html.dark textarea::placeholder {
+  color: #475569 !important;
+}
+
+/* Hover effects and other component specific overrides in dark mode */
+html.dark .hover\:bg-slate-50:hover {
+  background-color: #162238 !important;
+}
+
+html.dark .hover\:text-slate-800:hover {
+  color: #f8fafc !important;
+}
+
+html.dark .shadow-sm {
+  box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.5) !important;
+}
+

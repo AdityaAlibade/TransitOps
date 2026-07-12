@@ -29,7 +29,10 @@ interface NavbarProps {
 export const Navbar: React.FC<NavbarProps> = ({ onToggleSidebar, title = 'TransitOps Overview' }) => {
   const { user, logout, refreshUser } = useAuth();
   const { theme, toggleTheme } = useTheme();
+<<<<<<< HEAD
   const isDark = theme === 'dark';
+=======
+>>>>>>> 8811076 (Dark Mode feature)
   const navigate = useNavigate();
   
   // Dropdown states
@@ -168,22 +171,34 @@ export const Navbar: React.FC<NavbarProps> = ({ onToggleSidebar, title = 'Transi
 
   return (
     <>
+<<<<<<< HEAD
       <header className={`sticky top-0 z-30 flex items-center justify-between h-16 px-6 backdrop-blur-md border-b shadow-md transition-colors duration-200
         ${isDark 
           ? 'bg-slate-900/60 border-slate-800/85 shadow-slate-950/20 text-slate-100' 
           : 'bg-white/80 border-slate-200 shadow-slate-200/40 text-slate-900'}`}>
+=======
+      <header className="sticky top-0 z-30 flex items-center justify-between h-16 px-6 bg-white/70 dark:bg-slate-900/60 backdrop-blur-md border-b border-slate-200/80 dark:border-slate-800/85 shadow-md shadow-slate-200/50 dark:shadow-slate-950/20">
+>>>>>>> 8811076 (Dark Mode feature)
         
         {/* Left side: Toggler & Page Name */}
         <div className="flex items-center space-x-4">
           <button
             onClick={onToggleSidebar}
+<<<<<<< HEAD
             className={`p-1.5 rounded-lg lg:hidden transition-colors cursor-pointer
               ${isDark ? 'text-slate-400 hover:text-slate-200 hover:bg-slate-800/60' : 'text-slate-500 hover:text-slate-800 hover:bg-slate-100'}`}
+=======
+            className="p-1.5 text-slate-500 dark:text-slate-400 hover:text-slate-700 dark:hover:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-800/60 rounded-lg lg:hidden transition-colors cursor-pointer"
+>>>>>>> 8811076 (Dark Mode feature)
             aria-label="Toggle Sidebar"
           >
             <FiMenu className="w-6 h-6" />
           </button>
+<<<<<<< HEAD
           <h1 className={`text-lg font-bold tracking-tight select-none ${isDark ? 'text-slate-100' : 'text-slate-900'}`}>
+=======
+          <h1 className="text-lg font-bold text-slate-800 dark:text-slate-100 tracking-tight select-none">
+>>>>>>> 8811076 (Dark Mode feature)
             {title}
           </h1>
         </div>
@@ -204,23 +219,27 @@ export const Navbar: React.FC<NavbarProps> = ({ onToggleSidebar, title = 'Transi
                 setShowSearchDropdown(true);
               }}
               onFocus={() => setShowSearchDropdown(true)}
+<<<<<<< HEAD
               className={`w-64 pl-9 pr-3 py-1.5 text-xs border rounded-xl focus:outline-none focus:border-blue-500 transition
                 ${isDark 
                   ? 'bg-slate-950/80 border-slate-800 text-slate-200 placeholder-slate-500' 
                   : 'bg-slate-100 border-slate-200 text-slate-700 placeholder-slate-400'}`}
+=======
+              className="w-64 pl-9 pr-3 py-1.5 text-xs bg-slate-100 dark:bg-slate-950/80 border border-slate-200 dark:border-slate-800 rounded-xl focus:outline-none focus:border-blue-500 text-slate-700 dark:text-slate-200 placeholder-slate-400 dark:placeholder-slate-500 transition"
+>>>>>>> 8811076 (Dark Mode feature)
             />
 
             {/* Global Search Dropdown Overlay */}
             {showSearchDropdown && searchResults && (
-              <div className="absolute left-0 mt-2 w-80 bg-slate-900 border border-slate-800 rounded-2xl shadow-xl shadow-slate-950/50 py-3 text-xs overflow-hidden z-50">
-                <div className="px-4 pb-2 border-b border-slate-800 font-extrabold text-slate-455 uppercase tracking-wider text-[9px]">
+              <div className="absolute left-0 mt-2 w-80 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl shadow-xl shadow-slate-200/40 dark:shadow-slate-950/50 py-3 text-xs overflow-hidden z-50">
+                <div className="px-4 pb-2 border-b border-slate-100 dark:border-slate-800 font-extrabold text-slate-400 dark:text-slate-500 uppercase tracking-wider text-[9px]">
                   Global Registry Search Results
                 </div>
                 <div className="max-h-[320px] overflow-y-auto pr-1">
                   
                   {/* Vehicles Section */}
                   {searchResults.vehicles && searchResults.vehicles.length > 0 && (
-                    <div className="p-2 border-b border-slate-850">
+                    <div className="p-2 border-b border-slate-100 dark:border-slate-850">
                       <p className="px-2 font-extrabold text-blue-400 uppercase text-[8px] tracking-wider mb-1">Vehicles</p>
                       {searchResults.vehicles.map((v: any) => (
                         <button
@@ -231,12 +250,12 @@ export const Navbar: React.FC<NavbarProps> = ({ onToggleSidebar, title = 'Transi
                             setSearchQuery('');
                             navigate('/vehicles');
                           }}
-                          className="w-full flex items-center gap-2 px-2 py-1.5 text-slate-300 hover:bg-slate-800 rounded-lg text-left cursor-pointer transition font-medium"
+                          className="w-full flex items-center gap-2 px-2 py-1.5 text-slate-600 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-800 rounded-lg text-left cursor-pointer transition font-medium"
                         >
-                          <FiTruck className="w-3.5 h-3.5 text-slate-500" />
+                          <FiTruck className="w-3.5 h-3.5 text-slate-400 dark:text-slate-500" />
                           <div className="truncate">
-                            <p className="text-slate-200 font-bold leading-tight">{v.registration_number}</p>
-                            <p className="text-[10px] text-slate-500">{v.name_model} ({v.status})</p>
+                            <p className="text-slate-700 dark:text-slate-200 font-bold leading-tight">{v.registration_number}</p>
+                            <p className="text-[10px] text-slate-400 dark:text-slate-500">{v.name_model} ({v.status})</p>
                           </div>
                         </button>
                       ))}
@@ -245,8 +264,8 @@ export const Navbar: React.FC<NavbarProps> = ({ onToggleSidebar, title = 'Transi
 
                   {/* Drivers Section */}
                   {searchResults.drivers && searchResults.drivers.length > 0 && (
-                    <div className="p-2 border-b border-slate-850">
-                      <p className="px-2 font-extrabold text-teal-400 uppercase text-[8px] tracking-wider mb-1">Drivers</p>
+                    <div className="p-2 border-b border-slate-100 dark:border-slate-850">
+                      <p className="px-2 font-extrabold text-teal-600 dark:text-teal-400 uppercase text-[8px] tracking-wider mb-1">Drivers</p>
                       {searchResults.drivers.map((d: any) => (
                         <button
                           key={d.id}
@@ -256,12 +275,12 @@ export const Navbar: React.FC<NavbarProps> = ({ onToggleSidebar, title = 'Transi
                             setSearchQuery('');
                             navigate('/drivers');
                           }}
-                          className="w-full flex items-center gap-2 px-2 py-1.5 text-slate-300 hover:bg-slate-800 rounded-lg text-left cursor-pointer transition font-medium"
+                          className="w-full flex items-center gap-2 px-2 py-1.5 text-slate-600 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-800 rounded-lg text-left cursor-pointer transition font-medium"
                         >
-                          <FiUser className="w-3.5 h-3.5 text-slate-500" />
+                          <FiUser className="w-3.5 h-3.5 text-slate-400 dark:text-slate-500" />
                           <div className="truncate">
-                            <p className="text-slate-200 font-bold leading-tight">{d.name}</p>
-                            <p className="text-[10px] text-slate-500">DL: {d.license_number} ({d.status})</p>
+                            <p className="text-slate-700 dark:text-slate-200 font-bold leading-tight">{d.name}</p>
+                            <p className="text-[10px] text-slate-400 dark:text-slate-500">DL: {d.license_number} ({d.status})</p>
                           </div>
                         </button>
                       ))}
@@ -281,12 +300,12 @@ export const Navbar: React.FC<NavbarProps> = ({ onToggleSidebar, title = 'Transi
                             setSearchQuery('');
                             navigate('/trips');
                           }}
-                          className="w-full flex items-center gap-2 px-2 py-1.5 text-slate-300 hover:bg-slate-800 rounded-lg text-left cursor-pointer transition font-medium"
+                          className="w-full flex items-center gap-2 px-2 py-1.5 text-slate-600 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-800 rounded-lg text-left cursor-pointer transition font-medium"
                         >
-                          <FiNavigation className="w-3.5 h-3.5 text-slate-500" />
+                          <FiNavigation className="w-3.5 h-3.5 text-slate-400 dark:text-slate-500" />
                           <div className="truncate">
-                            <p className="text-slate-200 font-bold leading-tight">Trip #{t.id}</p>
-                            <p className="text-[10px] text-slate-500">{t.source} ➔ {t.destination}</p>
+                            <p className="text-slate-700 dark:text-slate-200 font-bold leading-tight">Trip #{t.id}</p>
+                            <p className="text-[10px] text-slate-400 dark:text-slate-500">{t.source} ➔ {t.destination}</p>
                           </div>
                         </button>
                       ))}
@@ -314,19 +333,25 @@ export const Navbar: React.FC<NavbarProps> = ({ onToggleSidebar, title = 'Transi
                 setShowNotifications(!showNotifications);
                 setShowSettings(false);
               }}
-              className="relative p-2 text-slate-400 hover:text-slate-200 rounded-xl hover:bg-slate-800/60 transition duration-150 cursor-pointer"
+              className="relative p-2 text-slate-500 dark:text-slate-400 hover:text-slate-700 dark:hover:text-slate-200 rounded-xl hover:bg-slate-100 dark:hover:bg-slate-800/60 transition duration-150 cursor-pointer"
             >
               <FiBell className="w-5 h-5" />
               {unreadCount > 0 && (
-                <span className="absolute top-1.5 right-1.5 w-2.5 h-2.5 bg-rose-600 rounded-full ring-2 ring-slate-900 animate-pulse"></span>
+                <span className="absolute top-1.5 right-1.5 w-2.5 h-2.5 bg-rose-600 rounded-full ring-2 ring-white dark:ring-slate-900 animate-pulse"></span>
               )}
             </button>
 
             {showNotifications && (
+<<<<<<< HEAD
               <div className={`absolute right-0 mt-2.5 w-80 border rounded-2xl shadow-xl py-3 text-xs overflow-hidden z-50 transition-colors duration-200
                 ${isDark ? 'bg-slate-900 border-slate-800 shadow-slate-950/50' : 'bg-white border-slate-200 shadow-slate-200/50'}`}>
                 <div className={`flex justify-between items-center px-4 pb-2.5 border-b ${isDark ? 'border-slate-800' : 'border-slate-100'}`}>
                   <span className={`font-extrabold uppercase tracking-wider ${isDark ? 'text-slate-300' : 'text-slate-700'}`}>Alert Notifications</span>
+=======
+              <div className="absolute right-0 mt-2.5 w-80 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl shadow-xl shadow-slate-200/40 dark:shadow-slate-950/50 py-3 text-xs overflow-hidden z-50">
+                <div className="flex justify-between items-center px-4 pb-2.5 border-b border-slate-100 dark:border-slate-800">
+                  <span className="font-extrabold text-slate-600 dark:text-slate-350 uppercase tracking-wider">Alert Notifications</span>
+>>>>>>> 8811076 (Dark Mode feature)
                   {unreadCount > 0 && (
                     <button 
                       onClick={handleClearNotifications}
@@ -343,6 +368,7 @@ export const Navbar: React.FC<NavbarProps> = ({ onToggleSidebar, title = 'Transi
                     </div>
                   ) : (
                     notifications.map((notif) => (
+<<<<<<< HEAD
                       <div key={notif.id} className={`p-3 border-b transition ${isDark ? 'border-slate-800 hover:bg-slate-800/50' : 'border-slate-100 hover:bg-slate-50'}`}>
                         <div className="flex justify-between items-start mb-1">
                           <span className="font-bold text-blue-500 uppercase tracking-wide text-[9px]">{notif.type.replace('_', ' ')}</span>
@@ -350,6 +376,15 @@ export const Navbar: React.FC<NavbarProps> = ({ onToggleSidebar, title = 'Transi
                         </div>
                         <p className={`font-bold truncate ${isDark ? 'text-slate-200' : 'text-slate-800'}`}>{notif.subject}</p>
                         <p className={`text-[10px] mt-1 line-clamp-2 ${isDark ? 'text-slate-400' : 'text-slate-500'}`}>{notif.body}</p>
+=======
+                      <div key={notif.id} className="p-3 border-b border-slate-100 dark:border-slate-850 hover:bg-slate-50 dark:hover:bg-slate-850/50 transition">
+                        <div className="flex justify-between items-start mb-1">
+                          <span className="font-bold text-blue-500 dark:text-blue-400 uppercase tracking-wide text-[9px]">{notif.type.replace('_', ' ')}</span>
+                          <span className="text-[8px] text-slate-400 dark:text-slate-500 flex items-center gap-0.5"><FiClock /> {new Date(notif.sent_at).toLocaleDateString()}</span>
+                        </div>
+                        <p className="font-bold text-slate-700 dark:text-slate-200 truncate">{notif.subject}</p>
+                        <p className="text-[10px] text-slate-500 dark:text-slate-400 mt-1 line-clamp-2">{notif.body}</p>
+>>>>>>> 8811076 (Dark Mode feature)
                       </div>
                     ))
                   )}
@@ -364,13 +399,18 @@ export const Navbar: React.FC<NavbarProps> = ({ onToggleSidebar, title = 'Transi
                 setShowSettings(!showSettings);
                 setShowNotifications(false);
               }}
+<<<<<<< HEAD
               className={`p-2 rounded-xl transition duration-150 cursor-pointer
                 ${isDark ? 'text-slate-400 hover:text-slate-200 hover:bg-slate-800/60' : 'text-slate-500 hover:text-slate-700 hover:bg-slate-100'}`}
+=======
+              className="p-2 text-slate-500 dark:text-slate-400 hover:text-slate-700 dark:hover:text-slate-200 rounded-xl hover:bg-slate-100 dark:hover:bg-slate-800/60 transition duration-150 cursor-pointer"
+>>>>>>> 8811076 (Dark Mode feature)
             >
               <FiSettings className="w-5 h-5" />
             </button>
  
             {showSettings && (
+<<<<<<< HEAD
               <div className={`absolute right-0 mt-2.5 w-64 border rounded-2xl shadow-xl py-2.5 text-xs z-50 transition-colors duration-200
                 ${isDark 
                   ? 'bg-slate-900 border-slate-800 shadow-slate-950/50' 
@@ -380,6 +420,14 @@ export const Navbar: React.FC<NavbarProps> = ({ onToggleSidebar, title = 'Transi
                 <div className={`px-4 py-2 border-b bg-slate-950/40 ${isDark ? 'border-slate-800' : 'border-slate-100'}`}>
                   <p className={`font-extrabold ${isDark ? 'text-slate-200' : 'text-slate-850'}`}>{name}</p>
                   <p className={`text-[10px] font-mono mt-0.5 truncate ${isDark ? 'text-slate-500' : 'text-slate-400'}`}>{user?.email}</p>
+=======
+              <div className="absolute right-0 mt-2.5 w-64 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl shadow-xl shadow-slate-200/40 dark:shadow-slate-950/50 py-2.5 text-xs z-50">
+                
+                {/* Profile Header Box */}
+                <div className="px-4 py-2 border-b border-slate-100 dark:border-slate-800 bg-slate-50 dark:bg-slate-950/40">
+                  <p className="font-extrabold text-slate-700 dark:text-slate-200">{name}</p>
+                  <p className="text-[10px] text-slate-500 font-mono mt-0.5 truncate">{user?.email}</p>
+>>>>>>> 8811076 (Dark Mode feature)
                   <span className="inline-flex mt-1.5 px-2 py-0.2 rounded-full font-bold uppercase text-[8px] bg-blue-500/10 text-blue-400 border border-blue-500/20">
                     {role.replace('_', ' ')}
                   </span>
@@ -411,19 +459,42 @@ export const Navbar: React.FC<NavbarProps> = ({ onToggleSidebar, title = 'Transi
                   {user?.role === 'Fleet_Manager' && (
                     <button
                       onClick={handleToggleAdminMode}
+<<<<<<< HEAD
                       className={`w-full flex items-center justify-between px-3 py-2 rounded-xl transition cursor-pointer text-left font-bold
                         ${isDark 
                           ? 'text-slate-300 hover:text-white hover:bg-slate-800' 
                           : 'text-slate-600 hover:text-slate-900 hover:bg-slate-100'}`}
+=======
+                      className="w-full flex items-center justify-between px-3 py-2 text-slate-650 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white hover:bg-slate-50 dark:hover:bg-slate-800 rounded-xl transition cursor-pointer text-left font-bold"
+>>>>>>> 8811076 (Dark Mode feature)
                     >
                       <div className="flex items-center space-x-2">
-                        <FiSliders className="w-4 h-4 text-slate-400" />
+                        <FiSliders className="w-4 h-4 text-slate-500 dark:text-slate-400" />
                         <span>{user.adminMode ? 'Disable Admin Mode' : 'Enable Admin Mode'}</span>
                       </div>
                       <span className={`w-2 h-2 rounded-full ${user.adminMode ? 'bg-emerald-500' : 'bg-slate-600'}`} />
                     </button>
                   )}
+<<<<<<< HEAD
  
+=======
+
+                  {/* Theme Mode Toggle */}
+                  <button
+                    onClick={toggleTheme}
+                    className="w-full flex items-center justify-between px-3 py-2 text-slate-650 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white hover:bg-slate-50 dark:hover:bg-slate-800 rounded-xl transition cursor-pointer text-left font-bold"
+                  >
+                    <div className="flex items-center space-x-2">
+                      {theme === 'dark' ? (
+                        <FiSun className="w-4 h-4 text-amber-500 dark:text-amber-400" />
+                      ) : (
+                        <FiMoon className="w-4 h-4 text-indigo-650 dark:text-indigo-400" />
+                      )}
+                      <span>{theme === 'dark' ? 'Light Mode' : 'Dark Mode'}</span>
+                    </div>
+                  </button>
+
+>>>>>>> 8811076 (Dark Mode feature)
                   {/* Password reset option */}
                   <button
                     onClick={() => {
@@ -434,12 +505,16 @@ export const Navbar: React.FC<NavbarProps> = ({ onToggleSidebar, title = 'Transi
                       setCurrentPassword('');
                       setNewPassword('');
                     }}
+<<<<<<< HEAD
                     className={`w-full flex items-center space-x-2 px-3 py-2 rounded-xl transition cursor-pointer text-left font-bold
                       ${isDark 
                         ? 'text-slate-300 hover:text-white hover:bg-slate-800' 
                         : 'text-slate-600 hover:text-slate-900 hover:bg-slate-100'}`}
+=======
+                    className="w-full flex items-center space-x-2 px-3 py-2 text-slate-650 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white hover:bg-slate-50 dark:hover:bg-slate-800 rounded-xl transition cursor-pointer text-left font-bold"
+>>>>>>> 8811076 (Dark Mode feature)
                   >
-                    <FiKey className="w-4 h-4 text-slate-400" />
+                    <FiKey className="w-4 h-4 text-slate-500 dark:text-slate-400" />
                     <span>Update Password</span>
                   </button>
 
@@ -449,7 +524,11 @@ export const Navbar: React.FC<NavbarProps> = ({ onToggleSidebar, title = 'Transi
           </div>
 
           {/* Divider */}
+<<<<<<< HEAD
           <div className={`w-px h-6 ${isDark ? 'bg-slate-800' : 'bg-slate-200'}`} />
+=======
+          <div className="w-px h-6 bg-slate-200 dark:bg-slate-800" />
+>>>>>>> 8811076 (Dark Mode feature)
 
           {/* Profile */}
           <div className="flex items-center space-x-2.5">
@@ -457,6 +536,7 @@ export const Navbar: React.FC<NavbarProps> = ({ onToggleSidebar, title = 'Transi
               {initials}
             </div>
             <div className="hidden sm:block text-left">
+<<<<<<< HEAD
               <p className={`text-xs font-semibold ${isDark ? 'text-slate-200' : 'text-slate-800'}`}>{name}</p>
               <p className={`text-[10px] uppercase ${isDark ? 'text-slate-500' : 'text-slate-400'}`}>{role.replace('_', ' ')}</p>
             </div>
@@ -464,6 +544,14 @@ export const Navbar: React.FC<NavbarProps> = ({ onToggleSidebar, title = 'Transi
               onClick={logout}
               className={`p-1.5 rounded-xl transition duration-150 ml-1 cursor-pointer
                 ${isDark ? 'text-slate-400 hover:text-rose-400 hover:bg-rose-500/10' : 'text-slate-500 hover:text-rose-500 hover:bg-rose-50'}`}
+=======
+              <p className="text-xs font-semibold text-slate-700 dark:text-slate-200">{name}</p>
+              <p className="text-[10px] text-slate-400 dark:text-slate-500 uppercase">{role.replace('_', ' ')}</p>
+            </div>
+            <button
+              onClick={logout}
+              className="p-1.5 text-slate-500 dark:text-slate-400 hover:text-rose-600 dark:hover:text-rose-400 hover:bg-rose-50 dark:hover:bg-rose-500/10 rounded-xl transition duration-150 ml-1 cursor-pointer"
+>>>>>>> 8811076 (Dark Mode feature)
               title="Sign Out"
             >
               <FiLogOut className="w-4 h-4" />

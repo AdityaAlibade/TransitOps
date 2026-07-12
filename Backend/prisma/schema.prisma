@@ -172,6 +172,11 @@ model Expense {
   trip    Trip?    @relation(fields: [trip_id], references: [id])
 }
 
+<<<<<<< HEAD
+=======
+
+
+>>>>>>> 8811076 (Dark Mode feature)
 model DriverRating {
   id         Int      @id @default(autoincrement())
   driver_id  Int
