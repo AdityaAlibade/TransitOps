@@ -78,7 +78,7 @@ export const WelcomeCard: React.FC = () => {
   return (
     <div className="relative overflow-hidden p-6 md:p-8 bg-slate-900 border border-slate-800/80 rounded-3xl text-white shadow-xl min-h-[180px] flex items-center">
       {/* Background image overlay with gradient */}
-      <div 
+      <div
         className="absolute inset-0 bg-cover bg-center opacity-30 md:opacity-40 pointer-events-none md:bg-right"
         style={{ backgroundImage: "url('/logistics_hero.png')" }}
       />
@@ -89,7 +89,7 @@ export const WelcomeCard: React.FC = () => {
           {greeting}, {userName}!
         </h2>
         <p className="text-slate-300 text-sm leading-relaxed font-medium">
-          Welcome to the **TransitOps** control tower. Track vehicles, manage driver performance, monitor dispatch workflows, and review operations logs from a unified hub.
+          Welcome to the TransitOps control tower. Track vehicles, manage driver performance, monitor dispatch workflows, and review operations logs from a unified hub.
         </p>
         <div className="pt-1">
           <span className="inline-flex items-center px-3 py-1 bg-emerald-500/10 backdrop-blur-md rounded-full text-[10px] font-bold text-emerald-400 uppercase tracking-wide border border-emerald-500/20">

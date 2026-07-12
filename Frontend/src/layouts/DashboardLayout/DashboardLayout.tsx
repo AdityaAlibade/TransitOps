@@ -2,10 +2,13 @@ import React, { useState } from 'react';
 import { Outlet, useLocation } from 'react-router-dom';
 import { Sidebar } from '../../components/Sidebar/Sidebar';
 import { Navbar } from '../../components/Navbar/Navbar';
+import { useTheme } from '../../context/ThemeContext';
 
 export const DashboardLayout: React.FC = () => {
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const location = useLocation();
+  const { theme } = useTheme();
+  const isDark = theme === 'dark';
 
   // Helper to resolve title from pathname
   const getPageTitle = (path: string): string => {
@@ -34,7 +37,7 @@ export const DashboardLayout: React.FC = () => {
   };
 
   return (
-    <div className="flex h-screen overflow-hidden bg-[#080c14] text-slate-100">
+    <div className={`flex h-screen overflow-hidden transition-colors duration-300 ${isDark ? 'bg-[#080c14] text-slate-100' : 'bg-slate-50 text-slate-900'}`}>
       {/* Sidebar navigation */}
       <Sidebar 
         isOpen={sidebarOpen} 

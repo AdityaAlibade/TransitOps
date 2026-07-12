@@ -9,10 +9,17 @@
     background-color: #080c14;
     @apply text-slate-200 antialiased;
     font-family: 'Outfit', sans-serif;
+    transition: background-color 0.3s ease, color 0.3s ease;
+  }
+
+  /* Light mode body override */
+  html.light body {
+    background-color: #f8fafc;
+    @apply text-slate-900;
   }
 }
 
-/* Custom scrollbars for dark premium interface */
+/* ── Dark mode scrollbars ── */
 ::-webkit-scrollbar {
   width: 8px;
   height: 8px;
@@ -22,17 +29,30 @@
   background: #0b0f19;
 }
 
+html.light ::-webkit-scrollbar-track {
+  background: #f1f5f9;
+}
+
 ::-webkit-scrollbar-thumb {
   background: #1e293b;
   border-radius: 4px;
   border: 2px solid #0b0f19;
 }
 
+html.light ::-webkit-scrollbar-thumb {
+  background: #cbd5e1;
+  border-color: #f1f5f9;
+}
+
 ::-webkit-scrollbar-thumb:hover {
   background: #334155;
 }
 
-/* Custom glow utility */
+html.light ::-webkit-scrollbar-thumb:hover {
+  background: #94a3b8;
+}
+
+/* Custom glow utilities */
 .glow-red {
   box-shadow: 0 0 15px rgba(225, 29, 72, 0.15);
 }
@@ -43,4 +63,11 @@
 
 .glow-teal {
   box-shadow: 0 0 15px rgba(20, 184, 166, 0.15);
+}
+
+/* Smooth theme transition for all elements */
+*, *::before, *::after {
+  transition-property: background-color, border-color, color, fill, stroke, box-shadow;
+  transition-duration: 200ms;
+  transition-timing-function: ease;
 }
