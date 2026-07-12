@@ -14,6 +14,8 @@ Built with **React**, **TypeScript**, **Node.js**, **Express**, **PostgreSQL**, 
 
 # 📌 Features
 
+
+
 - 🔐 JWT Authentication
 - 👥 User Management
 - 🚛 Vehicle Management
