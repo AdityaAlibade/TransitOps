@@ -14,5 +14,4 @@ router.use(authenticate);
 router.get('/', getMaintenanceLogs);
 router.post('/', createMaintenanceLog);
 router.patch('/:id/close', closeMaintenanceLog);
-
 export default router;

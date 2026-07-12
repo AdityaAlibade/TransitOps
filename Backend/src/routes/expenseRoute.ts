@@ -9,5 +9,4 @@ router.use(authenticate);
 
 router.get('/', getExpenses);
 router.post('/', createExpense);
-
 export default router;

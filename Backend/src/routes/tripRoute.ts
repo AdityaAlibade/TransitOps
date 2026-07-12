@@ -20,5 +20,4 @@ router.post('/', createTrip);
 router.patch('/:id/dispatch', dispatchTrip);
 router.patch('/:id/complete', completeTrip);
 router.patch('/:id/cancel', cancelTrip);
-
 export default router;

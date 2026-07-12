@@ -8,5 +8,4 @@ const router = Router();
 router.use(authenticate);
 
 router.get('/kpis', getDashboardKpis);
-
 export default router;
