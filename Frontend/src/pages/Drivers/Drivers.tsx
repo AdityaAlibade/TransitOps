@@ -4,8 +4,10 @@ import { SearchBar, FilterPlaceholder } from '../../components/Forms/Forms';
 import { Modal } from '../../components/Modal/Modal';
 import { api } from '../../services/api';
 import { FiPlus, FiAlertTriangle } from 'react-icons/fi';
+import { useAuth } from '../../context/AuthContext';
 
 export const Drivers: React.FC = () => {
+  const { user: currentUser, hasPermission } = useAuth();
   const [drivers, setDrivers] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -30,11 +32,16 @@ export const Drivers: React.FC = () => {
   const [licenseExp, setLicenseExp] = useState('');
   const [contactNum, setContactNum] = useState('');
   const [driverStatus, setDriverStatus] = useState('Available');
+  const [safetyScore, setSafetyScore] = useState('100');
 
   // Submit Feedback
   const [formSubmitting, setFormSubmitting] = useState(false);
   const [formError, setFormError] = useState<string | null>(null);
   const [formSuccess, setFormSuccess] = useState<string | null>(null);
+
+  const canEditRating = currentUser?.role === 'Admin' || 
+                        currentUser?.role === 'Safety_Officer' || 
+                        hasPermission('driver.rating.edit');
 
   const breadcrumbItems = [
     { label: 'TransitOps', href: '/' },
@@ -45,6 +52,7 @@ export const Drivers: React.FC = () => {
     { header: 'Driver ID', accessor: 'id' },
     { header: 'Full Name', accessor: 'name' },
     { header: 'License Number', accessor: 'license_number' },
+    { header: 'Safety Rating', accessor: 'safety_score' },
     { header: 'Status', accessor: 'status' },
     { header: 'Phone Number', accessor: 'contact_number' }
   ];
@@ -101,6 +109,7 @@ export const Drivers: React.FC = () => {
     setLicenseExp('');
     setContactNum('');
     setDriverStatus('Available');
+    setSafetyScore('100');
     setFormError(null);
     setFormSuccess(null);
     setModalOpen(true);
@@ -125,6 +134,7 @@ export const Drivers: React.FC = () => {
     
     setContactNum(item.contact_number || '');
     setDriverStatus(item.status);
+    setSafetyScore(String(item.safety_score));
     setFormError(null);
     setFormSuccess(null);
     setModalOpen(true);
@@ -141,6 +151,22 @@ export const Drivers: React.FC = () => {
   const handleOpenViewModal = (item: any) => {
     setModalMode('view');
     setSelectedDriver(item);
+    setDriverName(item.name);
+    setLicenseNum(item.license_number);
+    setLicenseCat(item.license_category || 'Heavy Transport');
+    
+    if (item.license_expiry_date) {
+      const d = new Date(item.license_expiry_date);
+      if (!isNaN(d.getTime())) {
+        setLicenseExp(d.toISOString().split('T')[0]);
+      }
+    } else {
+      setLicenseExp('');
+    }
+    
+    setContactNum(item.contact_number || '');
+    setDriverStatus(item.status);
+    setSafetyScore(String(item.safety_score));
     setModalOpen(true);
   };
 
@@ -151,7 +177,7 @@ export const Drivers: React.FC = () => {
     setFormSubmitting(true);
 
     try {
-      const payload = {
+      const payload: any = {
         name: driverName,
         license_number: licenseNum,
         license_category: licenseCat,
@@ -159,6 +185,10 @@ export const Drivers: React.FC = () => {
         contact_number: contactNum,
         status: driverStatus
       };
+
+      if (modalMode === 'edit') {
+        payload.safety_score = Number(safetyScore);
+      }
 
       if (modalMode === 'add') {
         await api.post('/drivers', payload);
@@ -171,7 +201,11 @@ export const Drivers: React.FC = () => {
       await fetchDrivers();
       setTimeout(() => setModalOpen(false), 1500);
     } catch (err: any) {
-      setFormError(err.message || 'Operation failed. Please review inputs.');
+      if (err.status === 403 || err.message?.toLowerCase().includes('forbidden') || err.message?.toLowerCase().includes('permission')) {
+        setFormError('Insufficient Permissions: You do not have permission to edit this driver data (e.g. Safety Score/Rating).');
+      } else {
+        setFormError(err.message || 'Operation failed. Please review inputs.');
+      }
     } finally {
       setFormSubmitting(false);
     }
@@ -329,7 +363,18 @@ export const Drivers: React.FC = () => {
               </div>
               <div>
                 <span className="text-slate-400 block font-semibold uppercase tracking-wide">Safety Score</span>
-                <span className="text-slate-850 text-sm font-bold mt-1 block text-emerald-600">{selectedDriver?.safety_score}%</span>
+                <div className="flex items-center gap-2 mt-1">
+                  <span className="text-slate-850 text-sm font-bold text-emerald-600">{selectedDriver?.safety_score}%</span>
+                  {canEditRating && (
+                    <button
+                      type="button"
+                      onClick={() => setModalMode('edit')}
+                      className="px-2 py-0.5 text-[8px] font-bold text-white bg-blue-600 hover:bg-blue-700 rounded transition uppercase cursor-pointer"
+                    >
+                      Edit Safety Rating
+                    </button>
+                  )}
+                </div>
               </div>
               <div>
                 <span className="text-slate-400 block font-semibold uppercase tracking-wide">Phone / Contact</span>
@@ -406,6 +451,27 @@ export const Drivers: React.FC = () => {
                 </div>
               )}
             </div>
+
+            {modalMode === 'edit' && (
+              <div className="grid grid-cols-2 gap-3 pt-2 border-t border-slate-100/50">
+                <div>
+                  <label className="text-[10px] uppercase font-bold text-slate-400 block mb-1">Safety Rating (%)</label>
+                  <input
+                    type="number"
+                    min="0"
+                    max="100"
+                    placeholder="100"
+                    value={safetyScore}
+                    onChange={e => setSafetyScore(e.target.value)}
+                    disabled={!canEditRating}
+                    className="block w-full border border-slate-200 text-slate-700 bg-white rounded-xl px-3 py-2 text-sm focus:outline-none disabled:bg-slate-50 disabled:text-slate-400"
+                  />
+                  {!canEditRating && (
+                    <span className="text-[8px] text-rose-500 font-semibold block mt-1">Read-only: requires driver.rating.edit permission</span>
+                  )}
+                </div>
+              </div>
+            )}
 
             <div className="flex justify-end space-x-2 pt-4 border-t border-slate-100">
               <button 

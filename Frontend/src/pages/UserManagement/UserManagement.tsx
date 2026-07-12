@@ -58,7 +58,13 @@ export const UserManagement: React.FC = () => {
   
   const [loading, setLoading] = useState(true);
   const [logLoading, setLogLoading] = useState(false);
-  const [activeTab, setActiveTab] = useState<'users' | 'logs'>('users');
+  const [activeTab, setActiveTab] = useState<'users' | 'logs' | 'reminders'>('users');
+  const [reminders, setReminders] = useState<any[]>([]);
+  const [reminderLoading, setReminderLoading] = useState(false);
+  const [manualReminderModalOpen, setManualReminderModalOpen] = useState(false);
+  const [manualRecipient, setManualRecipient] = useState('');
+  const [manualSubject, setManualSubject] = useState('');
+  const [manualBody, setManualBody] = useState('');
 
   // Modals state
   const [userModalOpen, setUserModalOpen] = useState(false);
@@ -108,9 +114,62 @@ export const UserManagement: React.FC = () => {
     fetchUsers();
   }, []);
 
+  const fetchReminders = async () => {
+    setReminderLoading(true);
+    try {
+      const res = await api.get('/reminders');
+      setReminders(res.data.data || []);
+    } catch (err) {
+      console.error('Error fetching reminders logs:', err);
+    } finally {
+      setReminderLoading(false);
+    }
+  };
+
+  const handleScanReminders = async () => {
+    setReminderLoading(true);
+    try {
+      const res = await api.post('/reminders/scan', {});
+      alert(res.data.message || 'Scan completed successfully.');
+      fetchReminders();
+    } catch (err: any) {
+      alert(err.message || 'Auto scan failed.');
+    } finally {
+      setReminderLoading(false);
+    }
+  };
+
+  const handleManualReminderSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setFormSubmitting(true);
+    setFormError(null);
+    setFormSuccess(null);
+    try {
+      await api.post('/reminders/send-manual', {
+        recipient: manualRecipient,
+        subject: manualSubject,
+        body: manualBody
+      });
+      setFormSuccess('Reminder logged and simulated send completed!');
+      setTimeout(() => {
+        setManualReminderModalOpen(false);
+        setManualRecipient('');
+        setManualSubject('');
+        setManualBody('');
+        fetchReminders();
+      }, 1000);
+    } catch (err: any) {
+      setFormError(err.message || 'Failed to dispatch manual alert.');
+    } finally {
+      setFormSubmitting(false);
+    }
+  };
+
   useEffect(() => {
     if (activeTab === 'logs') {
       fetchLogs();
+    } else if (activeTab === 'reminders') {
+      fetchReminders();
     }
   }, [activeTab]);
 
@@ -278,6 +337,14 @@ export const UserManagement: React.FC = () => {
             }`}
           >
             Audit Trail
+          </button>
+          <button
+            onClick={() => setActiveTab('reminders')}
+            className={`px-4 py-2 text-xs font-bold rounded-xl transition duration-150 cursor-pointer ${
+              activeTab === 'reminders' ? 'bg-white text-slate-800 shadow-sm' : 'text-slate-500 hover:text-slate-800'
+            }`}
+          >
+            Email Reminders
           </button>
         </div>
       </div>
@@ -496,6 +563,92 @@ export const UserManagement: React.FC = () => {
         </div>
       )}
 
+      {activeTab === 'reminders' && (
+        <div className="space-y-6">
+          <div className="flex justify-between items-center p-4 bg-white border border-slate-100 rounded-2xl shadow-sm">
+            <span className="text-xs font-semibold text-slate-500">
+              Review automatically compiled reminder alerts or trigger database checks.
+            </span>
+            <div className="flex space-x-2">
+              <button
+                onClick={handleScanReminders}
+                className="flex items-center justify-center space-x-2 px-3 py-2 text-xs font-bold text-slate-700 bg-slate-100 hover:bg-slate-200 border border-slate-200 rounded-xl transition duration-150 cursor-pointer"
+              >
+                <span>Trigger Expiry Check</span>
+              </button>
+              <button
+                onClick={() => {
+                  setManualRecipient('');
+                  setManualSubject('');
+                  setManualBody('');
+                  setFormError(null);
+                  setFormSuccess(null);
+                  setManualReminderModalOpen(true);
+                }}
+                className="flex items-center justify-center space-x-2 px-4 py-2.5 text-xs font-bold text-white bg-blue-600 hover:bg-blue-700 rounded-xl shadow-sm transition duration-150 cursor-pointer"
+              >
+                <span>Send Custom Alert</span>
+              </button>
+            </div>
+          </div>
+
+          <div className="bg-white border border-slate-100 rounded-3xl shadow-sm overflow-hidden">
+            {reminderLoading ? (
+              <div className="flex items-center justify-center py-12">
+                <Loader />
+              </div>
+            ) : (
+              <div className="overflow-x-auto">
+                <table className="w-full text-left text-xs border-collapse">
+                  <thead>
+                    <tr className="border-b border-slate-100 text-slate-400 font-extrabold uppercase bg-slate-50/50">
+                      <th className="py-3.5 px-6">Sent Date</th>
+                      <th className="py-3.5 px-6">Alert Type</th>
+                      <th className="py-3.5 px-6">Recipient</th>
+                      <th className="py-3.5 px-6">Subject</th>
+                      <th className="py-3.5 px-6">Message Body</th>
+                      <th className="py-3.5 px-6">Status</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {reminders.length === 0 ? (
+                      <tr>
+                        <td colSpan={6} className="py-8 text-center text-slate-400">No reminder alerts recorded.</td>
+                      </tr>
+                    ) : (
+                      reminders.map((rem) => (
+                        <tr key={rem.id} className="border-b border-slate-50 hover:bg-slate-50/50 transition">
+                          <td className="py-4 px-6 text-slate-500 whitespace-nowrap">
+                            {new Date(rem.sent_at).toLocaleString()}
+                          </td>
+                          <td className="py-4 px-6 font-bold text-slate-700">
+                            {rem.type.replace('_', ' ')}
+                          </td>
+                          <td className="py-4 px-6 text-slate-650 font-semibold">
+                            {rem.recipient}
+                          </td>
+                          <td className="py-4 px-6 font-extrabold text-blue-600">
+                            {rem.subject}
+                          </td>
+                          <td className="py-4 px-6 text-slate-500 max-w-xs truncate" title={rem.body}>
+                            {rem.body}
+                          </td>
+                          <td className="py-4 px-6">
+                            <span className="inline-flex px-2 py-0.5 rounded-full font-bold uppercase text-[9px] bg-emerald-50 text-emerald-800 border border-emerald-100">
+                              {rem.status}
+                            </span>
+                          </td>
+                        </tr>
+                      ))
+                    )}
+                  </tbody>
+                </table>
+              </div>
+            )}
+          </div>
+        </div>
+      )}
+
       {/* USER EDIT/CREATE MODAL */}
       <Modal isOpen={userModalOpen} onClose={() => setUserModalOpen(false)} title={selectedUser ? 'Edit System Account' : 'Register System Account'}>
         <form onSubmit={handleCreateOrUpdateUser} className="space-y-4">
@@ -651,6 +804,57 @@ export const UserManagement: React.FC = () => {
             </button>
           </div>
         </div>
+      </Modal>
+
+      {/* MANUAL REMINDER ALERT MODAL */}
+      <Modal isOpen={manualReminderModalOpen} onClose={() => setManualReminderModalOpen(false)} title="Send Custom Email Alert">
+        <form onSubmit={handleManualReminderSubmit} className="space-y-4">
+          {formError && (
+            <div className="p-3 bg-rose-500/10 border border-rose-500/20 rounded-2xl text-xs font-semibold text-rose-500">
+              {formError}
+            </div>
+          )}
+
+          {formSuccess && (
+            <div className="p-3 bg-emerald-500/10 border border-emerald-500/20 rounded-2xl text-xs font-semibold text-emerald-500">
+              {formSuccess}
+            </div>
+          )}
+
+          <div className="space-y-3">
+            <div>
+              <label className="text-[10px] uppercase font-bold text-slate-400 block mb-1">Recipient Email</label>
+              <input required type="email" placeholder="driver@transitops.com" value={manualRecipient} onChange={e => setManualRecipient(e.target.value)} className="block w-full border border-slate-200 text-slate-700 bg-white rounded-xl px-3 py-2 text-sm focus:outline-none" />
+            </div>
+
+            <div>
+              <label className="text-[10px] uppercase font-bold text-slate-400 block mb-1">Alert Subject</label>
+              <input required placeholder="⚠️ URGENT: Action Required" value={manualSubject} onChange={e => setManualSubject(e.target.value)} className="block w-full border border-slate-200 text-slate-700 bg-white rounded-xl px-3 py-2 text-sm focus:outline-none" />
+            </div>
+
+            <div>
+              <label className="text-[10px] uppercase font-bold text-slate-400 block mb-1">Alert Message Body</label>
+              <textarea required rows={4} placeholder="Type email message details here..." value={manualBody} onChange={e => setManualBody(e.target.value)} className="block w-full border border-slate-200 text-slate-700 bg-white rounded-xl px-3 py-2 text-sm focus:outline-none" />
+            </div>
+          </div>
+
+          <div className="flex justify-end space-x-2 pt-4 border-t border-slate-100">
+            <button 
+              type="button"
+              onClick={() => setManualReminderModalOpen(false)}
+              className="px-4 py-2 text-sm font-medium text-slate-500 bg-slate-100 hover:bg-slate-200 rounded-xl transition"
+            >
+              Cancel
+            </button>
+            <button 
+              type="submit"
+              disabled={formSubmitting}
+              className="px-4 py-2 text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 rounded-xl shadow-sm transition disabled:opacity-50"
+            >
+              {formSubmitting ? 'Sending...' : 'Send Simulated Email'}
+            </button>
+          </div>
+        </form>
       </Modal>
     </div>
   );

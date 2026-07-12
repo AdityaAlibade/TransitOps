@@ -252,3 +252,45 @@ export const getMe = async (req: Request, res: Response, next: NextFunction) => 
     next(error);
   }
 };
+
+export const changePassword = async (req: Request, res: Response, next: NextFunction) => {
+  try {
+    const { currentPassword, newPassword } = req.body;
+    if (!currentPassword || !newPassword) {
+      return res.status(400).json({ error: 'Bad Request', message: 'Current password and new password are required' });
+    }
+
+    const userId = req.user?.userId;
+    if (!userId) {
+      return res.status(401).json({ error: 'Unauthorized', message: 'Authentication required' });
+    }
+
+    const user = await prisma.user.findUnique({ where: { id: userId } });
+    if (!user) {
+      return res.status(404).json({ error: 'Not Found', message: 'User not found' });
+    }
+
+    const isMatch = await bcrypt.compare(currentPassword, user.password_hash);
+    if (!isMatch) {
+      return res.status(400).json({ error: 'Bad Request', message: 'Incorrect current password' });
+    }
+
+    const hashedNewPassword = await bcrypt.hash(newPassword, 10);
+    await prisma.user.update({
+      where: { id: userId },
+      data: { password_hash: hashedNewPassword }
+    });
+
+    await prisma.activityLog.create({
+      data: {
+        user_id: userId,
+        action: 'CHANGE_PASSWORD_SELF',
+        details: `User ${user.email} updated their own security password.`
+      }
+    });
+
+    return res.status(200).json({ message: 'Password updated successfully' });
+  } catch (error) {
+    next(error);
+  }
+};

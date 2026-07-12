@@ -39,6 +39,8 @@ export const Trips: React.FC = () => {
   const [showCompleteForm, setShowCompleteForm] = useState(false);
   const [actualDistance, setActualDistance] = useState('');
   const [fuelConsumed, setFuelConsumed] = useState('');
+  const [driverRating, setDriverRating] = useState('5');
+  const [driverFeedback, setDriverFeedback] = useState('');
 
   // Submit Feedback
   const [formSubmitting, setFormSubmitting] = useState(false);
@@ -142,6 +144,8 @@ export const Trips: React.FC = () => {
     setShowCompleteForm(false);
     setActualDistance('');
     setFuelConsumed('');
+    setDriverRating('5');
+    setDriverFeedback('');
     setFormError(null);
     setFormSuccess(null);
     setModalOpen(true);
@@ -212,7 +216,9 @@ export const Trips: React.FC = () => {
     try {
       await api.patch(`/trips/${selectedTrip.id}/complete`, {
         actual_distance_km: Number(actualDistance),
-        fuel_consumed_liters: Number(fuelConsumed)
+        fuel_consumed_liters: Number(fuelConsumed),
+        rating: Number(driverRating),
+        feedback: driverFeedback
       });
       
       // Also automatically log fuel expense
@@ -419,6 +425,24 @@ export const Trips: React.FC = () => {
                     <input required type="number" min="1" placeholder="45" value={fuelConsumed} onChange={e => setFuelConsumed(e.target.value)} className="block w-full border border-slate-200 text-slate-700 bg-white rounded-xl px-3 py-2 text-sm focus:outline-none" />
                   </div>
                 </div>
+
+                <div className="grid grid-cols-3 gap-3">
+                  <div className="col-span-1">
+                    <label className="text-[10px] uppercase font-bold text-slate-400 block mb-1">Driver Rating (1-5)</label>
+                    <select value={driverRating} onChange={e => setDriverRating(e.target.value)} className="block w-full border border-slate-200 text-slate-700 bg-white rounded-xl px-3 py-2 text-sm focus:outline-none">
+                      <option value="5">⭐⭐⭐⭐⭐ (5)</option>
+                      <option value="4">⭐⭐⭐⭐ (4)</option>
+                      <option value="3">⭐⭐⭐ (3)</option>
+                      <option value="2">⭐⭐ (2)</option>
+                      <option value="1">⭐ (1)</option>
+                    </select>
+                  </div>
+                  <div className="col-span-2">
+                    <label className="text-[10px] uppercase font-bold text-slate-400 block mb-1">Driver Feedback</label>
+                    <input placeholder="Safe driving, on time delivery" value={driverFeedback} onChange={e => setDriverFeedback(e.target.value)} className="block w-full border border-slate-200 text-slate-700 bg-white rounded-xl px-3 py-2 text-sm focus:outline-none" />
+                  </div>
+                </div>
+
                 <div className="flex justify-end space-x-2 pt-2">
                   <button type="button" onClick={() => setShowCompleteForm(false)} className="px-3 py-1.5 text-xs text-slate-500 bg-slate-100 hover:bg-slate-200 rounded-lg">Cancel</button>
                   <button type="submit" disabled={formSubmitting} className="px-3 py-1.5 text-xs text-white bg-emerald-600 hover:bg-emerald-700 rounded-lg">Submit Completion</button>

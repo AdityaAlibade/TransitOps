@@ -101,6 +101,12 @@ export const Table: React.FC<TableProps> = ({
       } catch {}
     }
 
+    if (col.accessor === 'safety_score' && val !== undefined && val !== null) {
+      const ratingVal = Math.round(Number(val) / 20);
+      const stars = '⭐'.repeat(Math.max(1, Math.min(5, ratingVal)));
+      return `${stars} (${Number(val).toFixed(0)}%)`;
+    }
+
     return val === null || val === undefined ? '--' : String(val);
   };
 

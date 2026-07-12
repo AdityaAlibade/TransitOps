@@ -12,6 +12,8 @@ import expenseRoute from './routes/expenseRoute';
 import reportRoute from './routes/reportRoute';
 import fuelLogRoute from './routes/fuelLogRoute';
 import userRoute from './routes/userRoute';
+import reminderRoute from './routes/reminderRoute';
+import searchRoute from './routes/searchRoute';
 
 const app = express();
 
@@ -34,6 +36,8 @@ app.use('/api/expenses', expenseRoute);
 app.use('/api/reports', reportRoute);
 app.use('/api/fuel-logs', fuelLogRoute);
 app.use('/api/users', userRoute);
+app.use('/api/reminders', reminderRoute);
+app.use('/api/search', searchRoute);
 
 // 404 handler
 app.use((req: Request, res: Response, next: NextFunction) => {

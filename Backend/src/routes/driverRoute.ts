@@ -4,7 +4,8 @@ import {
   getDriverById,
   createDriver,
   updateDriver,
-  deleteDriver
+  deleteDriver,
+  getDriverRatings
 } from '../controllers/driverController';
 import { authenticate } from '../middleware/authMiddleware';
 
@@ -18,4 +19,5 @@ router.get('/:id', getDriverById);
 router.post('/', createDriver);
 router.put('/:id', updateDriver);
 router.delete('/:id', deleteDriver);
+router.get('/:id/ratings', getDriverRatings);
 export default router;

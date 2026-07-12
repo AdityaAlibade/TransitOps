@@ -232,7 +232,9 @@ export const completeTrip = async (req: Request, res: Response, next: NextFuncti
     // Validate body
     const completeSchema = z.object({
       actual_distance_km: z.number().positive('Actual distance must be a positive number').optional(),
-      fuel_consumed_liters: z.number().positive('Fuel consumed must be a positive number').optional()
+      fuel_consumed_liters: z.number().positive('Fuel consumed must be a positive number').optional(),
+      rating: z.number().min(1).max(5).optional(),
+      feedback: z.string().optional()
     });
 
     const parseResult = completeSchema.safeParse(req.body);
@@ -243,7 +245,7 @@ export const completeTrip = async (req: Request, res: Response, next: NextFuncti
       });
     }
 
-    const { actual_distance_km, fuel_consumed_liters } = parseResult.data;
+    const { actual_distance_km, fuel_consumed_liters, rating, feedback } = parseResult.data;
 
     const trip = await prisma.trip.findUnique({
       where: { id }
@@ -285,9 +287,28 @@ export const completeTrip = async (req: Request, res: Response, next: NextFuncti
         data: vehicleData
       });
 
+      const driverData: any = { status: 'Available' };
+      if (rating !== undefined) {
+        await tx.driverRating.create({
+          data: {
+            driver_id: trip.driver_id,
+            trip_id: trip.id,
+            rating,
+            feedback
+          }
+        });
+
+        const allRatings = await tx.driverRating.findMany({
+          where: { driver_id: trip.driver_id }
+        });
+        const totalRating = allRatings.reduce((sum, r) => sum + r.rating, 0) + rating;
+        const avgRating = totalRating / (allRatings.length + 1);
+        driverData.safety_score = Math.round(avgRating * 20);
+      }
+
       await tx.driver.update({
         where: { id: trip.driver_id },
-        data: { status: 'Available' }
+        data: driverData
       });
 
       return updated;

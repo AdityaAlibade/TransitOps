@@ -21,8 +21,8 @@ router.use(authenticate);
 // Listing permissions is read-only information for managers/admins
 router.get('/available-permissions', getAvailablePermissions);
 
-// Only admins can toggle Admin Mode delegation for Fleet Managers
-router.post('/:id/toggle-admin-mode', authorizeRoles('Admin'), toggleAdminMode);
+// Only admins can toggle Admin Mode delegation for Fleet Managers, or Fleet Managers themselves
+router.post('/:id/toggle-admin-mode', toggleAdminMode);
 
 // User operations requiring specific permissions
 router.get('/', authorizePermissions('users:read'), getUsers);

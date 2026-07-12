@@ -252,6 +252,10 @@ export const toggleAdminMode = async (req: Request, res: Response, next: NextFun
       return res.status(400).json({ error: 'Bad Request', message: 'Invalid User ID' });
     }
 
+    if (req.user!.role !== 'Admin' && req.user!.userId !== id) {
+      return res.status(403).json({ error: 'Forbidden', message: 'You are not authorized to toggle Admin Mode for this account' });
+    }
+
     const targetUser = await prisma.user.findUnique({ where: { id } });
     if (!targetUser) {
       return res.status(404).json({ error: 'Not Found', message: 'User not found' });
