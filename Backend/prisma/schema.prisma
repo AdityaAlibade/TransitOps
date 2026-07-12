@@ -59,6 +59,8 @@ model User {
   role_id            Int?
   is_active          Boolean  @default(true)
   admin_mode_enabled Boolean  @default(false)
+  reset_token        String?
+  reset_token_expiry DateTime?
   created_at         DateTime @default(now())
   updated_at         DateTime @default(now()) @updatedAt
 

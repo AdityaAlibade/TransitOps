@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
 
 export const Login: React.FC = () => {
@@ -118,9 +118,9 @@ export const Login: React.FC = () => {
                 <label className="text-[10px] font-bold text-slate-400 uppercase tracking-wider block">
                   Security Password
                 </label>
-                <span className="text-xs text-rose-400 hover:underline cursor-pointer font-semibold">
+                <Link to="/forgot-password" className="text-xs text-rose-400 hover:underline font-semibold">
                   Forgot password?
-                </span>
+                </Link>
               </div>
               <input
                 type="password"

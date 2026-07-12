@@ -294,3 +294,90 @@ export const changePassword = async (req: Request, res: Response, next: NextFunc
     next(error);
   }
 };
+
+export const forgotPassword = async (req: Request, res: Response, next: NextFunction) => {
+  try {
+    const { email } = req.body;
+    if (!email) {
+      return res.status(400).json({ error: 'Bad Request', message: 'Email address is required' });
+    }
+
+    const user = await prisma.user.findUnique({ where: { email } });
+    if (!user) {
+      return res.status(404).json({ error: 'Not Found', message: 'User email not registered' });
+    }
+
+    // Generate a 6-digit verification code
+    const token = Math.floor(100000 + Math.random() * 900000).toString();
+    const expiry = new Date(Date.now() + 15 * 60 * 1000); // 15 minutes validity
+
+    await prisma.user.update({
+      where: { id: user.id },
+      data: {
+        reset_token: token,
+        reset_token_expiry: expiry
+      }
+    });
+
+    // Create system log for admin visibility
+    await prisma.activityLog.create({
+      data: {
+        user_id: user.id,
+        action: 'RESET_PASSWORD_REQUEST',
+        details: `User requested password reset. Security reset code generated: ${token}`
+      }
+    });
+
+    return res.status(200).json({
+      message: 'Reset code generated in system logs. Contact your Administrator to retrieve the verification code.'
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
+export const resetPassword = async (req: Request, res: Response, next: NextFunction) => {
+  try {
+    const { email, token, newPassword } = req.body;
+    if (!email || !token || !newPassword) {
+      return res.status(400).json({ error: 'Bad Request', message: 'Email, verification token, and new password are required' });
+    }
+
+    const user = await prisma.user.findUnique({ where: { email } });
+    if (!user) {
+      return res.status(404).json({ error: 'Not Found', message: 'User email not registered' });
+    }
+
+    if (!user.reset_token || user.reset_token !== token) {
+      return res.status(400).json({ error: 'Bad Request', message: 'Invalid verification token' });
+    }
+
+    if (!user.reset_token_expiry || new Date(user.reset_token_expiry) < new Date()) {
+      return res.status(400).json({ error: 'Bad Request', message: 'Verification token has expired' });
+    }
+
+    const hashedNewPassword = await bcrypt.hash(newPassword, 10);
+
+    await prisma.user.update({
+      where: { id: user.id },
+      data: {
+        password_hash: hashedNewPassword,
+        reset_token: null,
+        reset_token_expiry: null
+      }
+    });
+
+    // Create confirmation log
+    await prisma.activityLog.create({
+      data: {
+        user_id: user.id,
+        action: 'RESET_PASSWORD_COMPLETE',
+        details: `User completed password reset verification successfully.`
+      }
+    });
+
+    return res.status(200).json({ message: 'Password has been reset successfully' });
+  } catch (error) {
+    next(error);
+  }
+};

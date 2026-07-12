@@ -8,6 +8,7 @@ import { Maintenance } from '../pages/Maintenance/Maintenance';
 import { Expenses } from '../pages/Expenses/Expenses';
 import { Reports } from '../pages/Reports/Reports';
 import { Login } from '../pages/Login/Login';
+import { ForgotPassword } from '../pages/Login/ForgotPassword';
 import { ProtectedRoute } from '../components/ProtectedRoute/ProtectedRoute';
 import { AccessDenied } from '../pages/AccessDenied/AccessDenied';
 import { UserManagement } from '../pages/UserManagement/UserManagement';
@@ -16,6 +17,10 @@ export const router = createBrowserRouter([
   {
     path: '/login',
     element: <Login />
+  },
+  {
+    path: '/forgot-password',
+    element: <ForgotPassword />
   },
   {
     element: <ProtectedRoute />,
