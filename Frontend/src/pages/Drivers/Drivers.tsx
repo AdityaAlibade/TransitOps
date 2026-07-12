@@ -412,7 +412,7 @@ export const Drivers: React.FC = () => {
             <div className="grid grid-cols-2 gap-3">
               <div>
                 <label className="text-[10px] uppercase font-bold text-slate-400 block mb-1">Full Name</label>
-                <input required placeholder="David Driver" value={driverName} onChange={e => setDriverName(e.target.value)} className="block w-full border border-slate-200 text-slate-700 bg-white rounded-xl px-3 py-2 text-sm focus:outline-none" />
+                <input required placeholder="Devendra Yadav" value={driverName} onChange={e => setDriverName(e.target.value)} className="block w-full border border-slate-200 text-slate-700 bg-white rounded-xl px-3 py-2 text-sm focus:outline-none" />
               </div>
               <div>
                 <label className="text-[10px] uppercase font-bold text-slate-400 block mb-1">License Number</label>

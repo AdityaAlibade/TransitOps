@@ -665,14 +665,14 @@ export const UserManagement: React.FC = () => {
           )}
 
           <div className="space-y-3">
-            <div>
+             <div>
               <label className="text-[10px] uppercase font-bold text-slate-400 block mb-1">Full Name</label>
-              <input required placeholder="Alex Mercer" value={name} onChange={e => setName(e.target.value)} className="block w-full border border-slate-200 text-slate-700 bg-white rounded-xl px-3 py-2 text-sm focus:outline-none" />
+              <input required placeholder="Amit Sharma" value={name} onChange={e => setName(e.target.value)} className="block w-full border border-slate-200 text-slate-700 bg-white rounded-xl px-3 py-2 text-sm focus:outline-none" />
             </div>
 
             <div>
               <label className="text-[10px] uppercase font-bold text-slate-400 block mb-1">Email Address</label>
-              <input required type="email" placeholder="alex@transitops.com" value={email} onChange={e => setEmail(e.target.value)} className="block w-full border border-slate-200 text-slate-700 bg-white rounded-xl px-3 py-2 text-sm focus:outline-none" />
+              <input required type="email" placeholder="amit@transitops.com" value={email} onChange={e => setEmail(e.target.value)} className="block w-full border border-slate-200 text-slate-700 bg-white rounded-xl px-3 py-2 text-sm focus:outline-none" />
             </div>
 
             {!selectedUser && (

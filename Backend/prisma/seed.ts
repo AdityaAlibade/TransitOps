@@ -118,7 +118,7 @@ async function main() {
 
   const admin = await prisma.user.create({
     data: {
-      name: 'Admin User',
+      name: 'Amit Sharma',
       email: 'admin@transitops.com',
       password_hash: adminPassword,
       role: 'Admin',
@@ -128,7 +128,7 @@ async function main() {
 
   const manager = await prisma.user.create({
     data: {
-      name: 'Manager User',
+      name: 'Rajesh Kumar',
       email: 'manager@transitops.com',
       password_hash: managerPassword,
       role: 'Fleet_Manager',
@@ -138,7 +138,7 @@ async function main() {
 
   const driverUser = await prisma.user.create({
     data: {
-      name: 'Driver User',
+      name: 'Arjun Singh',
       email: 'driver@transitops.com',
       password_hash: driverPassword,
       role: 'Driver',
@@ -148,7 +148,7 @@ async function main() {
 
   await prisma.user.create({
     data: {
-      name: 'Safety Officer',
+      name: 'Sanjay Mehta',
       email: 'safety@transitops.com',
       password_hash: safetyPassword,
       role: 'Safety_Officer',
@@ -158,7 +158,7 @@ async function main() {
 
   await prisma.user.create({
     data: {
-      name: 'Analyst User',
+      name: 'Ananya Iyer',
       email: 'analyst@transitops.com',
       password_hash: analystPassword,
       role: 'Financial_Analyst',
@@ -234,7 +234,7 @@ async function main() {
   // Create Drivers
   const john = await prisma.driver.create({
     data: {
-      name: 'John Driver',
+      name: 'Jagdish Prasad',
       license_number: 'DL-12345678',
       license_category: 'Heavy Transport',
       license_expiry_date: new Date('2030-12-31T00:00:00Z'),
@@ -245,7 +245,7 @@ async function main() {
 
   const david = await prisma.driver.create({
     data: {
-      name: 'David Driver',
+      name: 'Devendra Yadav',
       license_number: 'DL-87654321',
       license_category: 'Light Motor Vehicle',
       license_expiry_date: new Date('2029-06-30T00:00:00Z'),
@@ -257,7 +257,7 @@ async function main() {
 
   const expired = await prisma.driver.create({
     data: {
-      name: 'Expired Driver',
+      name: 'Eshwar Gowda',
       license_number: 'DL-55556666',
       license_category: 'Heavy Transport',
       license_expiry_date: new Date('2025-05-15T00:00:00Z'), // Expired license
@@ -268,7 +268,7 @@ async function main() {
 
   const suspended = await prisma.driver.create({
     data: {
-      name: 'Suspended Driver',
+      name: 'Suresh Patil',
       license_number: 'DL-99990000',
       license_category: 'Heavy Transport',
       license_expiry_date: new Date('2031-01-01T00:00:00Z'),

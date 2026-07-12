@@ -76,9 +76,9 @@ async function runTests() {
   }
   console.log(`Found ${driversData.data.length} Available drivers.`);
 
-  // Find John Driver
+  // Find Jagdish Prasad
   const john = driversData.data.find(d => d.license_number === 'DL-12345678');
-  if (!john) throw new Error('John Driver not found in seeded data');
+  if (!john) throw new Error('Jagdish Prasad not found in seeded data');
 
   // Find Expired Driver (has expired license)
   const allDriversRes = await fetch(`${BASE_URL}/api/drivers`, { headers: authHeader });
