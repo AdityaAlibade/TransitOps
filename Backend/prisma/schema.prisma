@@ -7,41 +7,37 @@ generator client {
   provider = "prisma-client-js"
 }
 
-model Permission {
-  id   Int    @id @default(autoincrement())
-  name String @unique
-
-  rolePermissions RolePermission[]
-  userPermissions UserPermission[]
-}
-
 model Role {
-  id   Int    @id @default(autoincrement())
-  name String @unique
-
+  id              Int              @id @default(autoincrement())
+  name            String           @unique
   rolePermissions RolePermission[]
   users           User[]
+}
+
+model Permission {
+  id              Int              @id @default(autoincrement())
+  name            String           @unique
+  rolePermissions RolePermission[]
+  userPermissions UserPermission[]
 }
 
 model RolePermission {
   id            Int        @id @default(autoincrement())
   role_id       Int
   permission_id Int
-
-  role       Role       @relation(fields: [role_id], references: [id])
-  permission Permission @relation(fields: [permission_id], references: [id])
+  role          Role       @relation(fields: [role_id], references: [id], onDelete: Cascade)
+  permission    Permission @relation(fields: [permission_id], references: [id], onDelete: Cascade)
 
   @@unique([role_id, permission_id])
 }
 
 model UserPermission {
-  id            Int     @id @default(autoincrement())
+  id            Int        @id @default(autoincrement())
   user_id       Int
   permission_id Int
-  value         Boolean // true = grant, false = revoke
-
-  user       User       @relation(fields: [user_id], references: [id], onDelete: Cascade)
-  permission Permission @relation(fields: [permission_id], references: [id])
+  value         Boolean    @default(true) // true = grant override, false = revoke override
+  user          User       @relation(fields: [user_id], references: [id], onDelete: Cascade)
+  permission    Permission @relation(fields: [permission_id], references: [id], onDelete: Cascade)
 
   @@unique([user_id, permission_id])
 }
@@ -68,7 +64,7 @@ model User {
 
   trips           Trip[]
   driver          Driver?
-  roleRef         Role?           @relation(fields: [role_id], references: [id])
+  roleRef         Role?            @relation(fields: [role_id], references: [id])
   userPermissions UserPermission[]
 }
 
@@ -104,13 +100,13 @@ model Driver {
   created_at          DateTime @default(now())
   updated_at          DateTime @default(now()) @updatedAt
 
-  trips  Trip[]
-  user   User?          @relation(fields: [user_id], references: [id])
+  trips   Trip[]
+  user    User?          @relation(fields: [user_id], references: [id])
   ratings DriverRating[]
 }
 
 model Trip {
-  id                   Int       @id @default(autoincrement())
+  id                   Int           @id @default(autoincrement())
   source               String
   destination          String
   vehicle_id           Int
@@ -119,16 +115,16 @@ model Trip {
   planned_distance_km  Decimal
   actual_distance_km   Decimal?
   fuel_consumed_liters Decimal?
-  status               String    @default("Draft") // valid values: Draft, Dispatched, Completed, Cancelled
+  status               String        @default("Draft") // valid values: Draft, Dispatched, Completed, Cancelled
   created_by           Int
   dispatched_at        DateTime?
   completed_at         DateTime?
-  created_at           DateTime  @default(now())
-  updated_at           DateTime  @default(now()) @updatedAt
+  created_at           DateTime      @default(now())
+  updated_at           DateTime      @default(now()) @updatedAt
 
-  vehicle Vehicle   @relation(fields: [vehicle_id], references: [id])
-  driver  Driver    @relation(fields: [driver_id], references: [id])
-  creator User      @relation(fields: [created_by], references: [id])
+  vehicle      Vehicle       @relation(fields: [vehicle_id], references: [id])
+  driver       Driver        @relation(fields: [driver_id], references: [id])
+  creator      User          @relation(fields: [created_by], references: [id])
   fuel_logs    FuelLog[]
   expenses     Expense[]
   driverRating DriverRating?
@@ -174,49 +170,6 @@ model Expense {
 
   vehicle Vehicle? @relation(fields: [vehicle_id], references: [id])
   trip    Trip?    @relation(fields: [trip_id], references: [id])
-}
-
-model Role {
-  id              Int              @id @default(autoincrement())
-  name            String           @unique
-  rolePermissions RolePermission[]
-  users           User[]
-}
-
-model Permission {
-  id              Int              @id @default(autoincrement())
-  name            String           @unique
-  rolePermissions RolePermission[]
-  userPermissions UserPermission[]
-}
-
-model RolePermission {
-  id            Int        @id @default(autoincrement())
-  role_id       Int
-  permission_id Int
-  role          Role       @relation(fields: [role_id], references: [id], onDelete: Cascade)
-  permission    Permission @relation(fields: [permission_id], references: [id], onDelete: Cascade)
-
-  @@unique([role_id, permission_id])
-}
-
-model UserPermission {
-  id            Int        @id @default(autoincrement())
-  user_id       Int
-  permission_id Int
-  value         Boolean    @default(true) // true = grant override, false = revoke override
-  user          User       @relation(fields: [user_id], references: [id], onDelete: Cascade)
-  permission    Permission @relation(fields: [permission_id], references: [id], onDelete: Cascade)
-
-  @@unique([user_id, permission_id])
-}
-
-model ActivityLog {
-  id         Int      @id @default(autoincrement())
-  user_id    Int
-  action     String
-  details    String?
-  created_at DateTime @default(now())
 }
 
 model DriverRating {
