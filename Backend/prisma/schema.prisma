@@ -1,0 +1,123 @@
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+model User {
+  id            Int      @id @default(autoincrement())
+  name          String   @db.VarChar(100)
+  email         String   @unique
+  password_hash String
+  role          String   // valid values: Fleet_Manager, Driver, Safety_Officer, Financial_Analyst, Admin
+  created_at    DateTime @default(now())
+  updated_at    DateTime @default(now()) @updatedAt
+
+  trips  Trip[]
+  driver Driver?
+}
+
+model Vehicle {
+  id                  Int              @id @default(autoincrement())
+  registration_number String           @unique
+  name_model          String
+  type                String?
+  max_load_capacity_kg Decimal
+  odometer_km         Decimal          @default(0)
+  acquisition_cost    Decimal
+  status              String           @default("Available") // valid values: Available, On Trip, In Shop, Retired
+  region              String?
+  created_at          DateTime         @default(now())
+  updated_at          DateTime         @default(now()) @updatedAt
+
+  trips            Trip[]
+  maintenance_logs MaintenanceLog[]
+  fuel_logs        FuelLog[]
+  expenses         Expense[]
+}
+
+model Driver {
+  id                  Int      @id @default(autoincrement())
+  name                String
+  license_number      String   @unique
+  license_category    String?
+  license_expiry_date DateTime
+  contact_number      String?
+  safety_score        Decimal  @default(100)
+  status              String   @default("Available") // valid values: Available, On Trip, Off Duty, Suspended
+  user_id             Int?     @unique
+  created_at          DateTime @default(now())
+  updated_at          DateTime @default(now()) @updatedAt
+
+  trips Trip[]
+  user  User?  @relation(fields: [user_id], references: [id])
+}
+
+model Trip {
+  id                   Int       @id @default(autoincrement())
+  source               String
+  destination          String
+  vehicle_id           Int
+  driver_id            Int
+  cargo_weight_kg      Decimal
+  planned_distance_km  Decimal
+  actual_distance_km   Decimal?
+  fuel_consumed_liters Decimal?
+  status               String    @default("Draft") // valid values: Draft, Dispatched, Completed, Cancelled
+  created_by           Int
+  dispatched_at        DateTime?
+  completed_at         DateTime?
+  created_at           DateTime  @default(now())
+  updated_at           DateTime  @default(now()) @updatedAt
+
+  vehicle Vehicle   @relation(fields: [vehicle_id], references: [id])
+  driver  Driver    @relation(fields: [driver_id], references: [id])
+  creator User      @relation(fields: [created_by], references: [id])
+  fuel_logs FuelLog[]
+  expenses  Expense[]
+}
+
+model MaintenanceLog {
+  id               Int       @id @default(autoincrement())
+  vehicle_id       Int
+  maintenance_type String    // e.g. Oil Change, Tyre, Repair
+  description      String?
+  cost             Decimal   @default(0)
+  status           String    @default("Active") // valid values: Active, Closed
+  start_date       DateTime
+  end_date         DateTime?
+  created_at       DateTime  @default(now())
+  updated_at       DateTime  @default(now()) @updatedAt
+
+  vehicle Vehicle @relation(fields: [vehicle_id], references: [id])
+}
+
+model FuelLog {
+  id         Int      @id @default(autoincrement())
+  vehicle_id Int
+  trip_id    Int?
+  liters     Decimal
+  cost       Decimal
+  log_date   DateTime
+  created_at DateTime @default(now())
+
+  vehicle Vehicle @relation(fields: [vehicle_id], references: [id])
+  trip    Trip?   @relation(fields: [trip_id], references: [id])
+}
+
+model Expense {
+  id           Int      @id @default(autoincrement())
+  vehicle_id   Int?
+  trip_id      Int?
+  expense_type String   // valid values: Toll, Maintenance, Fuel, Other
+  amount       Decimal
+  expense_date DateTime
+  description  String?
+  created_at   DateTime @default(now())
+
+  vehicle Vehicle? @relation(fields: [vehicle_id], references: [id])
+  trip    Trip?    @relation(fields: [trip_id], references: [id])
+}

@@ -1,0 +1,18 @@
+# Dependency Directories
+node_modules/
+
+# Production Build Directories
+dist/
+coverage/
+
+# Telemetry and File Stores
+logs/
+uploads/
+temp/
+
+# Environment Variables
+.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
