@@ -1,15 +1,35 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { useAuth } from '../../context/AuthContext';
 
 export const Login: React.FC = () => {
   const navigate = useNavigate();
+  const { user, login } = useAuth();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [submitting, setSubmitting] = useState(false);
+  const [errorMsg, setErrorMsg] = useState<string | null>(null);
 
-  const handleSubmit = (e: React.FormEvent) => {
+  // Redirect if already authenticated
+  useEffect(() => {
+    if (user) {
+      navigate('/', { replace: true });
+    }
+  }, [user, navigate]);
+
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    // Redirect straight to dashboard as authentication logic is excluded per request.
-    navigate('/');
+    setErrorMsg(null);
+    setSubmitting(true);
+    try {
+      await login(email, password);
+      navigate('/', { replace: true });
+    } catch (err: any) {
+      console.error('Login error details:', err);
+      setErrorMsg(err.message || 'Invalid credentials or connection error');
+    } finally {
+      setSubmitting(false);
+    }
   };
 
   return (
@@ -26,6 +46,13 @@ export const Login: React.FC = () => {
           <p className="text-sm text-slate-400">Fleet Operations Management Console</p>
         </div>
 
+        {/* Error Message */}
+        {errorMsg && (
+          <div className="p-4 bg-rose-50 border border-rose-100 rounded-2xl text-xs font-medium text-rose-600 leading-relaxed">
+            {errorMsg}
+          </div>
+        )}
+
         {/* Mock Form */}
         <form onSubmit={handleSubmit} className="space-y-6">
           <div className="space-y-1.5">
@@ -38,6 +65,7 @@ export const Login: React.FC = () => {
               onChange={(e) => setEmail(e.target.value)}
               placeholder="admin@transitops.com"
               required
+              disabled={submitting}
               className="block w-full px-4 py-3 text-sm bg-slate-50 border border-slate-200 rounded-2xl placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200"
             />
           </div>
@@ -57,6 +85,7 @@ export const Login: React.FC = () => {
               onChange={(e) => setPassword(e.target.value)}
               placeholder="••••••••"
               required
+              disabled={submitting}
               className="block w-full px-4 py-3 text-sm bg-slate-50 border border-slate-200 rounded-2xl placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200"
             />
           </div>
@@ -66,6 +95,7 @@ export const Login: React.FC = () => {
             <input
               type="checkbox"
               id="remember"
+              disabled={submitting}
               className="w-4 h-4 rounded border-slate-300 text-blue-600 focus:ring-blue-500"
             />
             <label htmlFor="remember" className="text-xs text-slate-500 select-none">
@@ -76,9 +106,10 @@ export const Login: React.FC = () => {
           {/* Submit Button */}
           <button
             type="submit"
-            className="w-full py-3.5 text-sm font-semibold text-white bg-blue-600 hover:bg-blue-700 active:bg-blue-800 rounded-2xl transition duration-150 shadow-md shadow-blue-200 cursor-pointer"
+            disabled={submitting}
+            className="w-full py-3.5 text-sm font-semibold text-white bg-blue-600 hover:bg-blue-700 active:bg-blue-800 rounded-2xl transition duration-150 shadow-md shadow-blue-200 cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
           >
-            Sign In to Dashboard
+            {submitting ? 'Authenticating...' : 'Sign In to Dashboard'}
           </button>
         </form>
 

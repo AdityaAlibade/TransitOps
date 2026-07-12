@@ -1,5 +1,6 @@
 import React from 'react';
-import { FiMenu, FiBell, FiSearch, FiSettings } from 'react-icons/fi';
+import { FiMenu, FiBell, FiSearch, FiSettings, FiLogOut } from 'react-icons/fi';
+import { useAuth } from '../../context/AuthContext';
 
 interface NavbarProps {
   onToggleSidebar: () => void;
@@ -7,6 +8,21 @@ interface NavbarProps {
 }
 
 export const Navbar: React.FC<NavbarProps> = ({ onToggleSidebar, title = 'TransitOps Overview' }) => {
+  const { user, logout } = useAuth();
+
+  const getInitials = (fullName: string) => {
+    return fullName
+      .split(' ')
+      .map((n) => n[0])
+      .join('')
+      .toUpperCase()
+      .slice(0, 2);
+  };
+
+  const name = user?.name || 'Admin User';
+  const role = user?.role || 'Fleet Operations';
+  const initials = getInitials(name);
+
   return (
     <header className="sticky top-0 z-30 flex items-center justify-between h-16 px-6 bg-white border-b border-slate-100 shadow-sm shadow-slate-100/30">
       
@@ -62,12 +78,19 @@ export const Navbar: React.FC<NavbarProps> = ({ onToggleSidebar, title = 'Transi
         {/* Profile */}
         <div className="flex items-center space-x-2.5">
           <div className="w-8 h-8 rounded-full bg-blue-600 flex items-center justify-center text-white font-bold text-sm shadow-inner shadow-blue-500/20">
-            A
+            {initials}
           </div>
           <div className="hidden sm:block text-left">
-            <p className="text-xs font-semibold text-slate-800">Admin User</p>
-            <p className="text-[10px] text-slate-400">Fleet Operations</p>
+            <p className="text-xs font-semibold text-slate-800">{name}</p>
+            <p className="text-[10px] text-slate-400 uppercase">{role.replace('_', ' ')}</p>
           </div>
+          <button
+            onClick={logout}
+            className="p-1.5 text-slate-400 hover:text-rose-600 hover:bg-rose-50 rounded-xl transition duration-150 ml-1"
+            title="Sign Out"
+          >
+            <FiLogOut className="w-4 h-4" />
+          </button>
         </div>
       </div>
     </header>

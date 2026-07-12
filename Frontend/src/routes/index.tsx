@@ -8,6 +8,7 @@ import { Maintenance } from '../pages/Maintenance/Maintenance';
 import { Expenses } from '../pages/Expenses/Expenses';
 import { Reports } from '../pages/Reports/Reports';
 import { Login } from '../pages/Login/Login';
+import { ProtectedRoute } from '../components/ProtectedRoute/ProtectedRoute';
 
 export const router = createBrowserRouter([
   {
@@ -15,36 +16,41 @@ export const router = createBrowserRouter([
     element: <Login />
   },
   {
-    path: '/',
-    element: <DashboardLayout />,
+    element: <ProtectedRoute />,
     children: [
       {
-        index: true,
-        element: <Dashboard />
-      },
-      {
-        path: 'vehicles',
-        element: <Vehicles />
-      },
-      {
-        path: 'drivers',
-        element: <Drivers />
-      },
-      {
-        path: 'trips',
-        element: <Trips />
-      },
-      {
-        path: 'maintenance',
-        element: <Maintenance />
-      },
-      {
-        path: 'expenses',
-        element: <Expenses />
-      },
-      {
-        path: 'reports',
-        element: <Reports />
+        path: '/',
+        element: <DashboardLayout />,
+        children: [
+          {
+            index: true,
+            element: <Dashboard />
+          },
+          {
+            path: 'vehicles',
+            element: <Vehicles />
+          },
+          {
+            path: 'drivers',
+            element: <Drivers />
+          },
+          {
+            path: 'trips',
+            element: <Trips />
+          },
+          {
+            path: 'maintenance',
+            element: <Maintenance />
+          },
+          {
+            path: 'expenses',
+            element: <Expenses />
+          },
+          {
+            path: 'reports',
+            element: <Reports />
+          }
+        ]
       }
     ]
   }

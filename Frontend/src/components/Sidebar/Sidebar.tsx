@@ -1,6 +1,7 @@
 import React from 'react';
 import { NavLink } from 'react-router-dom';
 import type { IconType } from 'react-icons';
+import { useAuth } from '../../context/AuthContext';
 import { 
   FiGrid, 
   FiTruck, 
@@ -25,6 +26,7 @@ interface MenuItem {
 }
 
 export const Sidebar: React.FC<SidebarProps> = ({ isOpen, onClose }) => {
+  const { logout } = useAuth();
   const menuItems: MenuItem[] = [
     { name: 'Dashboard', path: '/', icon: FiGrid },
     { name: 'Vehicles', path: '/vehicles', icon: FiTruck },
@@ -97,13 +99,13 @@ export const Sidebar: React.FC<SidebarProps> = ({ isOpen, onClose }) => {
 
         {/* Footer / Logout */}
         <div className="p-4 border-t border-slate-800 bg-slate-900/50">
-          <NavLink
-            to="/login"
-            className="flex items-center space-x-3 px-4 py-3 text-sm font-medium text-slate-400 hover:text-rose-400 hover:bg-rose-500/5 rounded-xl transition-all duration-200"
+          <button
+            onClick={logout}
+            className="w-full flex items-center space-x-3 px-4 py-3 text-sm font-medium text-slate-400 hover:text-rose-400 hover:bg-rose-50/5 rounded-xl transition-all duration-200 text-left"
           >
             <FiLogOut className="w-5 h-5" />
             <span>Sign Out</span>
-          </NavLink>
+          </button>
         </div>
       </aside>
     </>

@@ -168,3 +168,52 @@ export const closeMaintenanceLog = async (req: Request, res: Response, next: Nex
     next(error);
   }
 };
+
+export const deleteMaintenanceLog = async (req: Request, res: Response, next: NextFunction) => {
+  try {
+    const id = parseInt(req.params.id, 10);
+    if (isNaN(id)) {
+      return res.status(400).json({
+        error: 'Bad Request',
+        message: 'Invalid maintenance log ID'
+      });
+    }
+
+    const log = await prisma.maintenanceLog.findUnique({
+      where: { id }
+    });
+
+    if (!log) {
+      return res.status(404).json({
+        error: 'Not Found',
+        message: 'Maintenance record not found'
+      });
+    }
+
+    // Atomically delete log, and if it was active, set vehicle status back to 'Available' (if vehicle exists and is in shop)
+    await prisma.$transaction(async (tx) => {
+      await tx.maintenanceLog.delete({
+        where: { id }
+      });
+
+      if (log.status === 'Active') {
+        const vehicle = await tx.vehicle.findUnique({
+          where: { id: log.vehicle_id }
+        });
+        if (vehicle && vehicle.status === 'In Shop') {
+          await tx.vehicle.update({
+            where: { id: log.vehicle_id },
+            data: { status: 'Available' }
+          });
+        }
+      }
+    });
+
+    return res.status(200).json({
+      message: 'Maintenance record deleted successfully'
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
