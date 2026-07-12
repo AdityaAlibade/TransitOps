@@ -1,6 +1,7 @@
 import React from 'react';
 import type { IconType } from 'react-icons';
 import { FiTrendingUp, FiTrendingDown } from 'react-icons/fi';
+import { useAuth } from '../../context/AuthContext';
 
 interface KPICardProps {
   title: string;
@@ -21,43 +22,43 @@ export const KPICard: React.FC<KPICardProps> = ({
 }) => {
   const colorMap: Record<string, { bg: string; text: string; iconBg: string }> = {
     blue: {
-      bg: 'bg-white',
-      text: 'text-blue-600',
-      iconBg: 'bg-blue-50 text-blue-600'
+      bg: 'bg-slate-900/60',
+      text: 'text-rose-500',
+      iconBg: 'bg-rose-500/10 text-rose-500 border border-rose-500/20 shadow-sm shadow-rose-950/20'
     },
     green: {
-      bg: 'bg-white',
-      text: 'text-emerald-600',
-      iconBg: 'bg-emerald-50 text-emerald-600'
+      bg: 'bg-slate-900/60',
+      text: 'text-emerald-400',
+      iconBg: 'bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 shadow-sm shadow-emerald-950/20'
     },
     orange: {
-      bg: 'bg-white',
-      text: 'text-orange-600',
-      iconBg: 'bg-orange-50 text-orange-600'
+      bg: 'bg-slate-900/60',
+      text: 'text-amber-400',
+      iconBg: 'bg-amber-500/10 text-amber-400 border border-amber-500/20 shadow-sm shadow-amber-950/20'
     },
     purple: {
-      bg: 'bg-white',
-      text: 'text-purple-600',
-      iconBg: 'bg-purple-50 text-purple-600'
+      bg: 'bg-slate-900/60',
+      text: 'text-indigo-400',
+      iconBg: 'bg-indigo-500/10 text-indigo-400 border border-indigo-500/20 shadow-sm shadow-indigo-950/20'
     }
   };
 
   const scheme = colorMap[color] || colorMap.blue;
 
   return (
-    <div className="flex items-center justify-between p-6 bg-white border border-slate-100 rounded-2xl shadow-sm hover:shadow-md hover:border-slate-200 transition-all duration-300">
+    <div className="flex items-center justify-between p-6 bg-slate-900/60 backdrop-blur-md border border-slate-800/80 rounded-3xl shadow-lg hover:shadow-xl hover:border-slate-700/80 transition-all duration-300">
       <div className="space-y-2">
-        <span className="text-xs font-semibold uppercase tracking-wider text-slate-400">{title}</span>
-        <h3 className="text-3xl font-bold text-slate-800">{value}</h3>
+        <span className="text-[10px] font-bold uppercase tracking-wider text-slate-500">{title}</span>
+        <h3 className="text-3xl font-extrabold text-slate-100">{value}</h3>
         {change && (
-          <div className="flex items-center space-x-1.5 text-xs font-medium">
+          <div className="flex items-center space-x-1.5 text-xs font-semibold">
             {trend === 'up' ? (
-              <FiTrendingUp className="text-emerald-500 w-3.5 h-3.5" />
+              <FiTrendingUp className="text-emerald-400 w-3.5 h-3.5" />
             ) : (
-              <FiTrendingDown className="text-rose-500 w-3.5 h-3.5" />
+              <FiTrendingDown className="text-rose-400 w-3.5 h-3.5" />
             )}
-            <span className={trend === 'up' ? 'text-emerald-600' : 'text-rose-600'}>{change}</span>
-            <span className="text-slate-400">vs last month</span>
+            <span className={trend === 'up' ? 'text-emerald-400' : 'text-rose-400'}>{change}</span>
+            <span className="text-slate-500">vs last month</span>
           </div>
         )}
       </div>
@@ -71,22 +72,27 @@ export const KPICard: React.FC<KPICardProps> = ({
 export const WelcomeCard: React.FC = () => {
   const currentHour = new Date().getHours();
   const greeting = currentHour < 12 ? 'Good morning' : currentHour < 18 ? 'Good afternoon' : 'Good evening';
+  const { user } = useAuth();
+  const userName = user?.name || 'Admin';
 
   return (
-    <div className="relative overflow-hidden p-6 md:p-8 bg-gradient-to-r from-blue-700 via-blue-600 to-sky-500 rounded-3xl text-white shadow-lg shadow-blue-100">
-      {/* Decorative patterns */}
-      <div className="absolute top-0 right-0 w-64 h-64 bg-white/5 rounded-full -mr-20 -mt-20 blur-3xl pointer-events-none" />
-      <div className="absolute bottom-0 right-0 w-80 h-80 bg-white/10 rounded-full -mr-10 -mb-20 blur-2xl pointer-events-none" />
+    <div className="relative overflow-hidden p-6 md:p-8 bg-slate-900 border border-slate-800/80 rounded-3xl text-white shadow-xl min-h-[180px] flex items-center">
+      {/* Background image overlay with gradient */}
+      <div 
+        className="absolute inset-0 bg-cover bg-center opacity-30 md:opacity-40 pointer-events-none md:bg-right"
+        style={{ backgroundImage: "url('/logistics_hero.png')" }}
+      />
+      <div className="absolute inset-0 bg-gradient-to-r from-slate-950 via-slate-950/70 to-transparent pointer-events-none" />
 
       <div className="relative z-10 max-w-xl space-y-3">
-        <h2 className="text-2xl md:text-3xl font-extrabold tracking-tight">
-          {greeting}, Admin!
+        <h2 className="text-2xl md:text-3xl font-extrabold tracking-tight text-white">
+          {greeting}, {userName}!
         </h2>
-        <p className="text-blue-50/90 text-sm md:text-base leading-relaxed font-medium">
+        <p className="text-slate-300 text-sm leading-relaxed font-medium">
           Welcome to the **TransitOps** control tower. Track vehicles, manage driver performance, monitor dispatch workflows, and review operations logs from a unified hub.
         </p>
-        <div className="pt-2">
-          <span className="inline-flex items-center px-3 py-1 bg-white/15 backdrop-blur-md rounded-full text-xs font-semibold text-white/95 uppercase tracking-wide border border-white/10">
+        <div className="pt-1">
+          <span className="inline-flex items-center px-3 py-1 bg-emerald-500/10 backdrop-blur-md rounded-full text-[10px] font-bold text-emerald-400 uppercase tracking-wide border border-emerald-500/20">
             System status: nominal
           </span>
         </div>

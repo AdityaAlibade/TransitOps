@@ -59,13 +59,13 @@ export const Table: React.FC<TableProps> = ({
     let bg = 'bg-slate-50 text-slate-600 border border-slate-100';
     
     if (['available', 'active', 'paid', 'approved', 'completed'].includes(status)) {
-      bg = 'bg-emerald-50 text-emerald-700 border border-emerald-100';
+      bg = 'bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 shadow-sm shadow-emerald-950/20';
     } else if (['in maintenance', 'in shop', 'pending approval', 'in transit', 'pending', 'draft', 'scheduled', 'on duty', 'dispatched'].includes(status)) {
-      bg = 'bg-amber-50 text-amber-700 border border-amber-100';
+      bg = 'bg-amber-500/10 text-amber-400 border border-amber-500/20 shadow-sm shadow-amber-950/20';
     } else if (['suspended', 'retired', 'rejected', 'overdue', 'cancelled', 'inactive', 'out of service', 'off duty'].includes(status)) {
-      bg = 'bg-rose-50 text-rose-700 border border-rose-100';
+      bg = 'bg-rose-500/10 text-rose-400 border border-rose-500/20 shadow-sm shadow-rose-950/20';
     } else if (['on trip'].includes(status)) {
-      bg = 'bg-blue-50 text-blue-700 border border-blue-100';
+      bg = 'bg-sky-500/10 text-sky-400 border border-sky-500/20 shadow-sm shadow-sky-950/20';
     }
 
     return (
@@ -109,21 +109,21 @@ export const Table: React.FC<TableProps> = ({
   const endIndex = Math.min(page * pageSize, totalEntries);
 
   return (
-    <div className="w-full bg-white border border-slate-100 rounded-2xl shadow-sm overflow-hidden">
+    <div className="w-full bg-slate-900/60 backdrop-blur-md border border-slate-800/80 rounded-3xl shadow-xl overflow-hidden">
       <div className="overflow-x-auto">
         <table className="w-full text-left border-collapse">
           <thead>
-            <tr className="bg-slate-50/70 border-b border-slate-100">
+            <tr className="bg-slate-950/60 border-b border-slate-800">
               {columns.map((col, idx) => (
                 <th 
                   key={idx} 
-                  className="px-6 py-4 text-xs font-semibold uppercase tracking-wider text-slate-500"
+                  className="px-6 py-4 text-xs font-bold uppercase tracking-wider text-slate-400"
                 >
                   {col.header}
                 </th>
               ))}
               {hasActions && (
-                <th className="px-6 py-4 text-xs font-semibold uppercase tracking-wider text-slate-500 text-right">
+                <th className="px-6 py-4 text-xs font-bold uppercase tracking-wider text-slate-400 text-right">
                   Actions
                 </th>
               )}
@@ -151,10 +151,10 @@ export const Table: React.FC<TableProps> = ({
               data.map((item, rowIdx) => (
                 <tr 
                   key={item.id || rowIdx} 
-                  className="border-b border-slate-50 hover:bg-slate-50/40 transition duration-150"
+                  className="border-b border-slate-800/60 hover:bg-slate-800/25 transition duration-150"
                 >
                   {columns.map((col, colIdx) => (
-                    <td key={colIdx} className="px-6 py-3.5 text-sm text-slate-600">
+                    <td key={colIdx} className="px-6 py-3.5 text-sm text-slate-300 font-medium">
                       {renderCell(item, col)}
                     </td>
                   ))}
@@ -164,7 +164,7 @@ export const Table: React.FC<TableProps> = ({
                         {onView && (
                           <button
                             onClick={() => onView(item)}
-                            className="p-1.5 text-slate-400 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition duration-150"
+                            className="p-1.5 text-slate-400 hover:text-rose-450 hover:bg-rose-500/10 rounded-lg transition duration-150"
                             title="View Details"
                           >
                             <FiEye className="w-4 h-4" />
@@ -173,7 +173,7 @@ export const Table: React.FC<TableProps> = ({
                         {onEdit && (
                           <button
                             onClick={() => onEdit(item)}
-                            className="p-1.5 text-slate-400 hover:text-amber-600 hover:bg-amber-50 rounded-lg transition duration-150"
+                            className="p-1.5 text-slate-400 hover:text-amber-400 hover:bg-amber-500/10 rounded-lg transition duration-150"
                             title="Edit"
                           >
                             <FiEdit2 className="w-4 h-4" />
@@ -182,7 +182,7 @@ export const Table: React.FC<TableProps> = ({
                         {onDelete && (
                           <button
                             onClick={() => onDelete(item)}
-                            className="p-1.5 text-slate-400 hover:text-rose-600 hover:bg-rose-50 rounded-lg transition duration-150"
+                            className="p-1.5 text-slate-400 hover:text-rose-400 hover:bg-rose-500/10 rounded-lg transition duration-150"
                             title="Delete"
                           >
                             <FiTrash2 className="w-4 h-4" />
@@ -199,20 +199,20 @@ export const Table: React.FC<TableProps> = ({
       </div>
       
       {/* Pagination Controls */}
-      <div className="flex items-center justify-between px-6 py-4 border-t border-slate-100 bg-white">
+      <div className="flex items-center justify-between px-6 py-4 border-t border-slate-800/80 bg-slate-900/40 text-slate-400">
         <div className="text-sm text-slate-500">
-          Showing <span className="font-medium text-slate-900">{startIndex}</span> to{' '}
-          <span className="font-medium text-slate-900">{endIndex}</span> of{' '}
-          <span className="font-medium text-slate-900">{totalEntries}</span> entries
+          Showing <span className="font-semibold text-slate-200">{startIndex}</span> to{' '}
+          <span className="font-semibold text-slate-200">{endIndex}</span> of{' '}
+          <span className="font-semibold text-slate-200">{totalEntries}</span> entries
         </div>
         <div className="flex space-x-2">
           <button 
             onClick={() => onPageChange?.(page - 1)}
             disabled={page <= 1 || loading}
-            className={`p-2 border border-slate-200 rounded-xl transition duration-150 ${
+            className={`p-2 border border-slate-800 rounded-xl transition duration-150 ${
               page <= 1 || loading
-                ? 'text-slate-300 bg-slate-50 cursor-not-allowed'
-                : 'text-slate-600 bg-white hover:bg-slate-50 hover:text-slate-800'
+                ? 'text-slate-500 bg-slate-950/40 border-slate-900/60 cursor-not-allowed'
+                : 'text-slate-300 bg-slate-955 hover:bg-slate-800 hover:text-white border-slate-700'
             }`}
           >
             <FiChevronLeft className="w-5 h-5" />
@@ -220,10 +220,10 @@ export const Table: React.FC<TableProps> = ({
           <button 
             onClick={() => onPageChange?.(page + 1)}
             disabled={page >= totalPages || loading}
-            className={`p-2 border border-slate-200 rounded-xl transition duration-150 ${
+            className={`p-2 border border-slate-800 rounded-xl transition duration-150 ${
               page >= totalPages || loading
-                ? 'text-slate-300 bg-slate-50 cursor-not-allowed'
-                : 'text-slate-600 bg-white hover:bg-slate-50 hover:text-slate-800'
+                ? 'text-slate-500 bg-slate-955/40 border-slate-900/60 cursor-not-allowed'
+                : 'text-slate-300 bg-slate-955 hover:bg-slate-800 hover:text-white border-slate-700'
             }`}
           >
             <FiChevronRight className="w-5 h-5" />
@@ -246,15 +246,15 @@ interface BreadcrumbProps {
 
 export const Breadcrumb: React.FC<BreadcrumbProps> = ({ items }) => {
   return (
-    <nav className="flex mb-4 text-xs font-medium text-slate-400">
+    <nav className="flex mb-4 text-xs font-semibold text-slate-500">
       <ol className="inline-flex items-center space-x-1 md:space-x-2">
         {items.map((item, idx) => (
           <li key={idx} className="inline-flex items-center">
-            {idx > 0 && <span className="mx-2 text-slate-300">/</span>}
+            {idx > 0 && <span className="mx-2 text-slate-800">/</span>}
             {item.active ? (
-              <span className="text-slate-600">{item.label}</span>
+              <span className="text-slate-300">{item.label}</span>
             ) : (
-              <a href={item.href || '#'} className="hover:text-blue-600 transition-colors">
+              <a href={item.href || '#'} className="hover:text-rose-500 transition-colors text-slate-500">
                 {item.label}
               </a>
             )}

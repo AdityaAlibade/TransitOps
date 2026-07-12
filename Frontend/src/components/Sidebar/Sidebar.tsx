@@ -56,7 +56,7 @@ export const Sidebar: React.FC<SidebarProps> = ({ isOpen, onClose }) => {
         {/* Header / Logo */}
         <div className="flex items-center justify-between h-16 px-6 border-b border-slate-800">
           <div className="flex items-center space-x-2.5">
-            <div className="w-8 h-8 rounded-lg bg-blue-600 flex items-center justify-center text-white font-black text-lg shadow-md shadow-blue-500/20">
+            <div className="w-8 h-8 rounded-lg bg-rose-600 flex items-center justify-center text-white font-black text-lg shadow-md shadow-rose-500/20">
               T
             </div>
             <span className="text-lg font-bold tracking-tight text-white">TransitOps</span>
@@ -82,8 +82,8 @@ export const Sidebar: React.FC<SidebarProps> = ({ isOpen, onClose }) => {
               className={({ isActive }) => `
                 flex items-center space-x-3 px-4 py-3 text-sm font-medium rounded-xl transition-all duration-200
                 ${isActive 
-                  ? 'bg-blue-600 text-white shadow-lg shadow-blue-600/10' 
-                  : 'hover:bg-slate-800 hover:text-white'
+                  ? 'bg-rose-600 text-white shadow-lg shadow-rose-600/20' 
+                  : 'hover:bg-slate-800/60 hover:text-white'
                 }
               `}
             >

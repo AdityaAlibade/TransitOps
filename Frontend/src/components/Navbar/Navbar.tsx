@@ -24,18 +24,18 @@ export const Navbar: React.FC<NavbarProps> = ({ onToggleSidebar, title = 'Transi
   const initials = getInitials(name);
 
   return (
-    <header className="sticky top-0 z-30 flex items-center justify-between h-16 px-6 bg-white border-b border-slate-100 shadow-sm shadow-slate-100/30">
+    <header className="sticky top-0 z-30 flex items-center justify-between h-16 px-6 bg-slate-900/60 backdrop-blur-md border-b border-slate-800/85 shadow-md shadow-slate-950/20">
       
       {/* Left side: Toggler & Page Name */}
       <div className="flex items-center space-x-4">
         <button
           onClick={onToggleSidebar}
-          className="p-1.5 text-slate-500 hover:text-slate-700 hover:bg-slate-50 rounded-lg lg:hidden transition-colors"
+          className="p-1.5 text-slate-400 hover:text-slate-200 hover:bg-slate-800/60 rounded-lg lg:hidden transition-colors"
           aria-label="Toggle Sidebar"
         >
           <FiMenu className="w-6 h-6" />
         </button>
-        <h1 className="text-lg font-bold text-slate-800 tracking-tight select-none">
+        <h1 className="text-lg font-bold text-slate-100 tracking-tight select-none">
           {title}
         </h1>
       </div>
@@ -44,49 +44,49 @@ export const Navbar: React.FC<NavbarProps> = ({ onToggleSidebar, title = 'Transi
       <div className="flex items-center space-x-4">
         {/* Search button placeholder (desktop/tablet) */}
         <div className="relative hidden md:block">
-          <span className="absolute inset-y-0 left-0 flex items-center pl-3 text-slate-400 pointer-events-none">
+          <span className="absolute inset-y-0 left-0 flex items-center pl-3 text-slate-500 pointer-events-none">
             <FiSearch className="w-4 h-4" />
           </span>
           <input
             type="text"
             placeholder="Global search..."
             disabled
-            className="w-48 pl-9 pr-3 py-1.5 text-xs bg-slate-50 border border-slate-200 rounded-xl cursor-not-allowed focus:outline-none"
+            className="w-48 pl-9 pr-3 py-1.5 text-xs bg-slate-950/80 border border-slate-800 rounded-xl cursor-not-allowed focus:outline-none text-slate-300 placeholder-slate-500"
           />
         </div>
 
         {/* Notifications */}
         <button 
           disabled
-          className="relative p-2 text-slate-400 hover:text-slate-600 rounded-xl hover:bg-slate-50 transition duration-150 cursor-not-allowed"
+          className="relative p-2 text-slate-400 hover:text-slate-200 rounded-xl hover:bg-slate-800/60 transition duration-150 cursor-not-allowed"
         >
           <FiBell className="w-5 h-5" />
-          <span className="absolute top-1.5 right-1.5 w-2 h-2 bg-blue-600 rounded-full ring-2 ring-white"></span>
+          <span className="absolute top-1.5 right-1.5 w-2 h-2 bg-rose-600 rounded-full ring-2 ring-slate-900"></span>
         </button>
 
         {/* Settings */}
         <button 
           disabled
-          className="p-2 text-slate-400 hover:text-slate-600 rounded-xl hover:bg-slate-50 transition duration-150 cursor-not-allowed"
+          className="p-2 text-slate-400 hover:text-slate-200 rounded-xl hover:bg-slate-800/60 transition duration-150 cursor-not-allowed"
         >
           <FiSettings className="w-5 h-5" />
         </button>
 
         {/* Divider */}
-        <div className="w-px h-6 bg-slate-200" />
+        <div className="w-px h-6 bg-slate-800" />
 
         {/* Profile */}
         <div className="flex items-center space-x-2.5">
-          <div className="w-8 h-8 rounded-full bg-blue-600 flex items-center justify-center text-white font-bold text-sm shadow-inner shadow-blue-500/20">
+          <div className="w-8 h-8 rounded-full bg-rose-600 flex items-center justify-center text-white font-bold text-sm shadow-inner shadow-rose-500/20">
             {initials}
           </div>
           <div className="hidden sm:block text-left">
-            <p className="text-xs font-semibold text-slate-800">{name}</p>
-            <p className="text-[10px] text-slate-400 uppercase">{role.replace('_', ' ')}</p>
+            <p className="text-xs font-semibold text-slate-200">{name}</p>
+            <p className="text-[10px] text-slate-500 uppercase">{role.replace('_', ' ')}</p>
           </div>
           <button
             onClick={logout}
-            className="p-1.5 text-slate-400 hover:text-rose-600 hover:bg-rose-50 rounded-xl transition duration-150 ml-1"
+            className="p-1.5 text-slate-400 hover:text-rose-400 hover:bg-rose-500/10 rounded-xl transition duration-150 ml-1"
             title="Sign Out"
           >
             <FiLogOut className="w-4 h-4" />

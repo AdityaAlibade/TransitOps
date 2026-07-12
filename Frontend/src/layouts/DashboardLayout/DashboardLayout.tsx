@@ -30,7 +30,7 @@ export const DashboardLayout: React.FC = () => {
   };
 
   return (
-    <div className="flex h-screen overflow-hidden bg-slate-50">
+    <div className="flex h-screen overflow-hidden bg-[#080c14] text-slate-100">
       {/* Sidebar navigation */}
       <Sidebar 
         isOpen={sidebarOpen} 

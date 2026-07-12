@@ -360,34 +360,32 @@ export const Dashboard: React.FC = () => {
           description="Aggregates monthly fuel, repairs, and miscellaneous costs"
           data={expenseChartData}
         />
-      </div>
-
-      {/* Bottom Grid: Recent Activity & Quick Actions */}
+      </div>      {/* Bottom Grid: Recent Activity & Quick Actions */}
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         
         {/* Recent Activity Card */}
-        <div className="lg:col-span-2 p-6 bg-white border border-slate-100 rounded-2xl shadow-sm">
+        <div className="lg:col-span-2 p-6 bg-slate-900/60 border border-slate-800/80 rounded-3xl backdrop-blur-md shadow-lg">
           <div className="mb-4">
-            <h3 className="text-base font-semibold text-slate-800">Recent System Activity</h3>
-            <p className="text-xs text-slate-400">Chronological list of background telemetry and events</p>
+            <h3 className="text-base font-semibold text-slate-100">Recent System Activity</h3>
+            <p className="text-xs text-slate-500">Chronological list of background telemetry and events</p>
           </div>
           
-          <div className="relative border-l border-slate-100 pl-4 space-y-6 min-h-[200px] flex flex-col justify-start">
+          <div className="relative border-l border-slate-800 pl-4 space-y-6 min-h-[200px] flex flex-col justify-start">
             {activities.length === 0 ? (
               <div className="text-center py-8 flex-1 flex flex-col items-center justify-center">
                 <span className="text-sm font-medium text-slate-400">No activity logs recorded</span>
-                <p className="text-xs text-slate-300 mt-1">Vehicle telemetry events will display here in real-time.</p>
+                <p className="text-xs text-slate-500 mt-1">Vehicle telemetry events will display here in real-time.</p>
               </div>
             ) : (
               activities.map((act) => (
                 <div key={act.id} className="relative pl-2">
-                  <span className="absolute -left-[25px] mt-1 bg-white border border-slate-100 p-1 rounded-full shadow-sm">
+                  <span className="absolute -left-[25px] mt-1 bg-slate-950 border border-slate-800 p-1.5 rounded-full shadow-sm">
                     {getEventIcon(act.type)}
                   </span>
                   <div>
-                    <span className="text-xs font-semibold text-slate-800">{act.title}</span>
-                    <p className="text-xs text-slate-500 mt-0.5">{act.description}</p>
-                    <span className="text-[10px] text-slate-400 block mt-1">{act.time}</span>
+                    <span className="text-xs font-semibold text-slate-200">{act.title}</span>
+                    <p className="text-xs text-slate-400 mt-0.5">{act.description}</p>
+                    <span className="text-[10px] text-slate-500 block mt-1">{act.time}</span>
                   </div>
                 </div>
               ))
@@ -396,47 +394,47 @@ export const Dashboard: React.FC = () => {
         </div>
 
         {/* Quick Actions Card */}
-        <div className="p-6 bg-white border border-slate-100 rounded-2xl shadow-sm flex flex-col justify-between">
+        <div className="p-6 bg-slate-900/60 border border-slate-800/80 rounded-3xl backdrop-blur-md shadow-lg flex flex-col justify-between">
           <div>
             <div className="mb-4">
-              <h3 className="text-base font-semibold text-slate-800">Quick Actions</h3>
-              <p className="text-xs text-slate-400">Common administrative workflows</p>
+              <h3 className="text-base font-semibold text-slate-100">Quick Actions</h3>
+              <p className="text-xs text-slate-500">Common administrative workflows</p>
             </div>
             
             <div className="grid grid-cols-2 gap-3">
               <button
                 onClick={() => triggerQuickAction('Register New Vehicle')}
-                className="flex flex-col items-center justify-center p-4 bg-slate-50 hover:bg-blue-50 hover:text-blue-600 border border-slate-100 rounded-xl transition duration-200 group text-slate-600"
+                className="flex flex-col items-center justify-center p-4 bg-slate-950/60 hover:bg-rose-600/10 border border-slate-850 hover:border-rose-500/30 rounded-2xl transition duration-200 group text-slate-300 hover:text-rose-450 shadow-inner"
               >
-                <FiPlus className="w-5 h-5 mb-2 group-hover:scale-110 transition-transform" />
+                <FiPlus className="w-5 h-5 mb-2 group-hover:scale-110 transition-transform text-rose-500" />
                 <span className="text-xs font-semibold text-center">New Vehicle</span>
               </button>
               <button
                 onClick={() => triggerQuickAction('Register New Driver')}
-                className="flex flex-col items-center justify-center p-4 bg-slate-50 hover:bg-blue-50 hover:text-blue-600 border border-slate-100 rounded-xl transition duration-200 group text-slate-600"
+                className="flex flex-col items-center justify-center p-4 bg-slate-950/60 hover:bg-rose-600/10 border border-slate-850 hover:border-rose-500/30 rounded-2xl transition duration-200 group text-slate-300 hover:text-rose-450 shadow-inner"
               >
-                <FiUsers className="w-5 h-5 mb-2 group-hover:scale-110 transition-transform" />
+                <FiUsers className="w-5 h-5 mb-2 group-hover:scale-110 transition-transform text-indigo-400" />
                 <span className="text-xs font-semibold text-center">New Driver</span>
               </button>
               <button
                 onClick={() => triggerQuickAction('Dispatch New Trip')}
-                className="flex flex-col items-center justify-center p-4 bg-slate-50 hover:bg-blue-50 hover:text-blue-600 border border-slate-100 rounded-xl transition duration-200 group text-slate-600"
+                className="flex flex-col items-center justify-center p-4 bg-slate-950/60 hover:bg-rose-600/10 border border-slate-850 hover:border-rose-500/30 rounded-2xl transition duration-200 group text-slate-300 hover:text-rose-450 shadow-inner"
               >
-                <FiMapPin className="w-5 h-5 mb-2 group-hover:scale-110 transition-transform" />
+                <FiMapPin className="w-5 h-5 mb-2 group-hover:scale-110 transition-transform text-emerald-400" />
                 <span className="text-xs font-semibold text-center">Dispatch Trip</span>
               </button>
               <button
                 onClick={() => triggerQuickAction('Schedule Maintenance')}
-                className="flex flex-col items-center justify-center p-4 bg-slate-50 hover:bg-blue-50 hover:text-blue-600 border border-slate-100 rounded-xl transition duration-200 group text-slate-600"
+                className="flex flex-col items-center justify-center p-4 bg-slate-950/60 hover:bg-rose-600/10 border border-slate-850 hover:border-rose-500/30 rounded-2xl transition duration-200 group text-slate-300 hover:text-rose-450 shadow-inner"
               >
-                <FiTool className="w-5 h-5 mb-2 group-hover:scale-110 transition-transform" />
+                <FiTool className="w-5 h-5 mb-2 group-hover:scale-110 transition-transform text-amber-400" />
                 <span className="text-xs font-semibold text-center">Schedule Repair</span>
               </button>
             </div>
           </div>
 
-          <div className="mt-6 pt-4 border-t border-slate-50 text-center">
-            <span className="text-[10px] uppercase font-bold tracking-wider text-slate-400">
+          <div className="mt-6 pt-4 border-t border-slate-800/80 text-center">
+            <span className="text-[10px] uppercase font-bold tracking-wider text-slate-500">
               System Operations Hub
             </span>
           </div>

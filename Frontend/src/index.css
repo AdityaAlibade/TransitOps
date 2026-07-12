@@ -1,28 +1,46 @@
+@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800;900&display=swap');
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
 @layer base {
   body {
-    @apply bg-slate-50 text-slate-900 font-sans antialiased;
+    background-color: #080c14;
+    @apply text-slate-200 antialiased;
+    font-family: 'Outfit', sans-serif;
   }
 }
 
-/* Custom scrollbars for clean modern SaaS feel */
+/* Custom scrollbars for dark premium interface */
 ::-webkit-scrollbar {
-  width: 6px;
-  height: 6px;
+  width: 8px;
+  height: 8px;
 }
 
 ::-webkit-scrollbar-track {
-  background: transparent;
+  background: #0b0f19;
 }
 
 ::-webkit-scrollbar-thumb {
-  background: #cbd5e1;
-  border-radius: 3px;
+  background: #1e293b;
+  border-radius: 4px;
+  border: 2px solid #0b0f19;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: #94a3b8;
+  background: #334155;
+}
+
+/* Custom glow utility */
+.glow-red {
+  box-shadow: 0 0 15px rgba(225, 29, 72, 0.15);
+}
+
+.glow-orange {
+  box-shadow: 0 0 15px rgba(249, 115, 22, 0.15);
+}
+
+.glow-teal {
+  box-shadow: 0 0 15px rgba(20, 184, 166, 0.15);
 }
