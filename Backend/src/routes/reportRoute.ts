@@ -18,4 +18,5 @@ router.get('/utilization', getUtilization);
 router.get('/operational-cost', getOperationalCost);
 router.get('/roi', getRoi);
 router.get('/export/csv', exportCSV);
+router.get('/export', exportCSV);
 export default router;
