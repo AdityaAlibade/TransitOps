@@ -8,6 +8,8 @@ export interface User {
   name: string;
   email: string;
   role: UserRole;
+  permissions: string[];
+  adminMode: boolean;
 }
 
 interface AuthContextType {
@@ -65,28 +67,10 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   };
 
   // Helper to determine permissions dynamically.
-  // Admin and Fleet Manager have all access, others are restricted to their domains.
-  const hasPermission = (moduleName: string): boolean => {
+  const hasPermission = (permissionName: string): boolean => {
     if (!user) return false;
-    const role = user.role;
-    if (role === 'Admin' || role === 'Fleet_Manager') return true;
-
-    switch (moduleName) {
-      case 'vehicles':
-        return role === 'Safety_Officer'; // Safety officers can view/inspect
-      case 'drivers':
-        return role === 'Safety_Officer'; // Safety officers track licenses
-      case 'trips':
-        return role === 'Driver' || role === 'Safety_Officer'; // Drivers view/manage trips
-      case 'maintenance':
-        return role === 'Safety_Officer'; // Maintenance is safety related
-      case 'expenses':
-        return role === 'Financial_Analyst'; // Financial analyst tracks expenses
-      case 'reports':
-        return role === 'Financial_Analyst'; // Financial analyst runs reports
-      default:
-        return false;
-    }
+    if (user.role === 'Admin') return true;
+    return user.permissions.includes(permissionName);
   };
 
   return (

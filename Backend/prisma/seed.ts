@@ -5,6 +5,9 @@ const prisma = new PrismaClient();
 
 async function main() {
   console.log('Clearing database...');
+  await prisma.activityLog.deleteMany();
+  await prisma.userPermission.deleteMany();
+  await prisma.rolePermission.deleteMany();
   await prisma.expense.deleteMany();
   await prisma.fuelLog.deleteMany();
   await prisma.maintenanceLog.deleteMany();
@@ -12,21 +15,124 @@ async function main() {
   await prisma.driver.deleteMany();
   await prisma.vehicle.deleteMany();
   await prisma.user.deleteMany();
+  await prisma.role.deleteMany();
+  await prisma.permission.deleteMany();
 
   console.log('Seeding database...');
 
+  // 1. Seed Permissions
+  const permissionsList = [
+    'vehicles:read',
+    'vehicles:write',
+    'drivers:read',
+    'drivers:write',
+    'trips:read',
+    'trips:write',
+    'trips:read:own',
+    'trips:write:own',
+    'maintenance:read',
+    'maintenance:write',
+    'expenses:read',
+    'expenses:write',
+    'reports:read',
+    'reports:generate',
+    'reports:export',
+    'users:read',
+    'users:write',
+    'activity_logs:read'
+  ];
+
+  const dbPermissions = [];
+  for (const name of permissionsList) {
+    const p = await prisma.permission.create({ data: { name } });
+    dbPermissions.push(p);
+  }
+  const permMap = new Map(dbPermissions.map(p => [p.name, p.id]));
+
+  // 2. Seed Roles
+  const roles = [
+    {
+      name: 'Admin',
+      perms: permissionsList
+    },
+    {
+      name: 'Fleet_Manager',
+      perms: [
+        'vehicles:read', 'vehicles:write',
+        'drivers:read', 'drivers:write',
+        'trips:read', 'trips:write',
+        'maintenance:read', 'maintenance:write',
+        'expenses:read', 'expenses:write',
+        'reports:read', 'reports:generate', 'reports:export'
+      ]
+    },
+    {
+      name: 'Driver',
+      perms: [
+        'trips:read:own', 'trips:write:own'
+      ]
+    },
+    {
+      name: 'Safety_Officer',
+      perms: [
+        'vehicles:read', 'vehicles:write',
+        'drivers:read', 'drivers:write',
+        'trips:read',
+        'maintenance:read', 'maintenance:write'
+      ]
+    },
+    {
+      name: 'Financial_Analyst',
+      perms: [
+        'expenses:read', 'expenses:write',
+        'reports:read', 'reports:generate', 'reports:export'
+      ]
+    }
+  ];
+
+  const roleMap = new Map<string, number>();
+  for (const r of roles) {
+    const dbRole = await prisma.role.create({ data: { name: r.name } });
+    roleMap.set(r.name, dbRole.id);
+
+    // Create role permissions
+    for (const pName of r.perms) {
+      const pId = permMap.get(pName);
+      if (pId) {
+        await prisma.rolePermission.create({
+          data: {
+            role_id: dbRole.id,
+            permission_id: pId
+          }
+        });
+      }
+    }
+  }
+
   // Create Users
+  const adminPassword = await bcrypt.hash('admin123', 10);
   const managerPassword = await bcrypt.hash('manager123', 10);
   const driverPassword = await bcrypt.hash('driver123', 10);
   const safetyPassword = await bcrypt.hash('safety123', 10);
   const analystPassword = await bcrypt.hash('analyst123', 10);
+
+  const admin = await prisma.user.create({
+    data: {
+      name: 'Admin User',
+      email: 'admin@transitops.com',
+      password_hash: adminPassword,
+      role: 'Admin',
+      role_id: roleMap.get('Admin')
+    }
+  });
 
   const manager = await prisma.user.create({
     data: {
       name: 'Manager User',
       email: 'manager@transitops.com',
       password_hash: managerPassword,
-      role: 'Fleet_Manager'
+      role: 'Fleet_Manager',
+      role_id: roleMap.get('Fleet_Manager')
     }
   });
 
@@ -35,7 +141,8 @@ async function main() {
       name: 'Driver User',
       email: 'driver@transitops.com',
       password_hash: driverPassword,
-      role: 'Driver'
+      role: 'Driver',
+      role_id: roleMap.get('Driver')
     }
   });
 
@@ -44,7 +151,8 @@ async function main() {
       name: 'Safety Officer',
       email: 'safety@transitops.com',
       password_hash: safetyPassword,
-      role: 'Safety_Officer'
+      role: 'Safety_Officer',
+      role_id: roleMap.get('Safety_Officer')
     }
   });
 
@@ -53,7 +161,8 @@ async function main() {
       name: 'Analyst User',
       email: 'analyst@transitops.com',
       password_hash: analystPassword,
-      role: 'Financial_Analyst'
+      role: 'Financial_Analyst',
+      role_id: roleMap.get('Financial_Analyst')
     }
   });
 

@@ -24,6 +24,10 @@ export const DashboardLayout: React.FC = () => {
         return 'Finance & Expenses';
       case '/reports':
         return 'Analytics Reports';
+      case '/users':
+        return 'User & Security Registry';
+      case '/403':
+        return 'Access Restriction';
       default:
         return 'TransitOps Control';
     }

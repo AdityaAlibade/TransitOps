@@ -76,6 +76,13 @@ export const login = async (req: Request, res: Response, next: NextFunction) => 
       });
     }
 
+    if (!user.is_active) {
+      return res.status(401).json({
+        error: 'Unauthorized',
+        message: 'Account has been deactivated. Contact administration.'
+      });
+    }
+
     // Check password
     const passwordMatch = await bcrypt.compare(password, user.password_hash);
     if (!passwordMatch) {
@@ -85,13 +92,64 @@ export const login = async (req: Request, res: Response, next: NextFunction) => 
       });
     }
 
+    // Load dynamic permissions
+    const roleWithPermissions = await prisma.role.findFirst({
+      where: { name: user.role },
+      include: {
+        rolePermissions: {
+          include: { permission: true }
+        }
+      }
+    });
+
+    const standardPermissions = roleWithPermissions
+      ? roleWithPermissions.rolePermissions.map(rp => rp.permission.name)
+      : [];
+
+    const overrides = await prisma.userPermission.findMany({
+      where: { user_id: user.id },
+      include: { permission: true }
+    });
+
+    const grantedOverrides = new Set(
+      overrides.filter(o => o.value === true).map(o => o.permission.name)
+    );
+    const revokedOverrides = new Set(
+      overrides.filter(o => o.value === false).map(o => o.permission.name)
+    );
+
+    const permissions = new Set(standardPermissions);
+    
+    // Add dynamic permissions for Fleet Managers in Admin Mode
+    if (user.role === 'Fleet_Manager' && user.admin_mode_enabled) {
+      permissions.add('users:read');
+      permissions.add('users:write');
+      permissions.add('activity_logs:read');
+    }
+
+    grantedOverrides.forEach(p => permissions.add(p));
+    revokedOverrides.forEach(p => permissions.delete(p));
+
+    const finalPermissions = Array.from(permissions);
+
+    // Track login activity
+    await prisma.activityLog.create({
+      data: {
+        user_id: user.id,
+        action: 'User Login',
+        details: `Successfully authenticated as ${user.role}.`
+      }
+    });
+
     // Sign JWT
     const secret = process.env.JWT_SECRET || 'super-secret-transitops-key-change-in-production';
     const token = jwt.sign(
       {
         userId: user.id,
         email: user.email,
-        role: user.role
+        role: user.role,
+        permissions: finalPermissions,
+        adminMode: user.admin_mode_enabled
       },
       secret,
       { expiresIn: '24h' }
@@ -102,7 +160,11 @@ export const login = async (req: Request, res: Response, next: NextFunction) => 
     return res.status(200).json({
       data: {
         token,
-        user: userWithoutHash
+        user: {
+          ...userWithoutHash,
+          permissions: finalPermissions,
+          adminMode: user.admin_mode_enabled
+        }
       }
     });
   } catch (error) {
@@ -130,10 +192,61 @@ export const getMe = async (req: Request, res: Response, next: NextFunction) => 
       });
     }
 
+    if (!user.is_active) {
+      return res.status(401).json({
+        error: 'Unauthorized',
+        message: 'Account has been deactivated.'
+      });
+    }
+
+    // Retrieve dynamically compiled permissions list
+    const roleWithPermissions = await prisma.role.findFirst({
+      where: { name: user.role },
+      include: {
+        rolePermissions: {
+          include: { permission: true }
+        }
+      }
+    });
+
+    const standardPermissions = roleWithPermissions
+      ? roleWithPermissions.rolePermissions.map(rp => rp.permission.name)
+      : [];
+
+    const overrides = await prisma.userPermission.findMany({
+      where: { user_id: user.id },
+      include: { permission: true }
+    });
+
+    const grantedOverrides = new Set(
+      overrides.filter(o => o.value === true).map(o => o.permission.name)
+    );
+    const revokedOverrides = new Set(
+      overrides.filter(o => o.value === false).map(o => o.permission.name)
+    );
+
+    const permissions = new Set(standardPermissions);
+    
+    // Add dynamic permissions for Fleet Managers in Admin Mode
+    if (user.role === 'Fleet_Manager' && user.admin_mode_enabled) {
+      permissions.add('users:read');
+      permissions.add('users:write');
+      permissions.add('activity_logs:read');
+    }
+
+    grantedOverrides.forEach(p => permissions.add(p));
+    revokedOverrides.forEach(p => permissions.delete(p));
+
+    const finalPermissions = Array.from(permissions);
+
     const { password_hash, ...userWithoutHash } = user;
 
     return res.status(200).json({
-      data: userWithoutHash
+      data: {
+        ...userWithoutHash,
+        permissions: finalPermissions,
+        adminMode: user.admin_mode_enabled
+      }
     });
   } catch (error) {
     next(error);

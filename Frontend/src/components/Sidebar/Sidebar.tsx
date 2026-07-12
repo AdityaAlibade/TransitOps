@@ -11,7 +11,8 @@ import {
   FiDollarSign, 
   FiBarChart2, 
   FiLogOut,
-  FiX
+  FiX,
+  FiSettings
 } from 'react-icons/fi';
 
 interface SidebarProps {
@@ -23,19 +24,32 @@ interface MenuItem {
   name: string;
   path: string;
   icon: IconType;
+  permission?: string;
+  check?: () => boolean;
 }
 
 export const Sidebar: React.FC<SidebarProps> = ({ isOpen, onClose }) => {
-  const { logout } = useAuth();
+  const { logout, hasPermission } = useAuth();
+  
   const menuItems: MenuItem[] = [
     { name: 'Dashboard', path: '/', icon: FiGrid },
-    { name: 'Vehicles', path: '/vehicles', icon: FiTruck },
-    { name: 'Drivers', path: '/drivers', icon: FiUsers },
-    { name: 'Trips', path: '/trips', icon: FiMapPin },
-    { name: 'Maintenance', path: '/maintenance', icon: FiTool },
-    { name: 'Expenses', path: '/expenses', icon: FiDollarSign },
-    { name: 'Reports', path: '/reports', icon: FiBarChart2 },
+    { name: 'Vehicles', path: '/vehicles', icon: FiTruck, permission: 'vehicles:read' },
+    { name: 'Drivers', path: '/drivers', icon: FiUsers, permission: 'drivers:read' },
+    { name: 'Trips', path: '/trips', icon: FiMapPin, check: () => hasPermission('trips:read') || hasPermission('trips:read:own') },
+    { name: 'Maintenance', path: '/maintenance', icon: FiTool, permission: 'maintenance:read' },
+    { name: 'Expenses', path: '/expenses', icon: FiDollarSign, permission: 'expenses:read' },
+    { name: 'Reports', path: '/reports', icon: FiBarChart2, permission: 'reports:read' },
   ];
+
+  if (hasPermission('users:read')) {
+    menuItems.push({ name: 'User Management', path: '/users', icon: FiSettings });
+  }
+
+  const filteredMenuItems = menuItems.filter(item => {
+    if (item.check) return item.check();
+    if (item.permission) return hasPermission(item.permission);
+    return true;
+  });
 
   return (
     <>
@@ -71,7 +85,7 @@ export const Sidebar: React.FC<SidebarProps> = ({ isOpen, onClose }) => {
 
         {/* Navigation links */}
         <nav className="flex-1 px-4 py-6 space-y-1.5 overflow-y-auto">
-          {menuItems.map((item) => (
+          {filteredMenuItems.map((item) => (
             <NavLink
               key={item.path}
               to={item.path}

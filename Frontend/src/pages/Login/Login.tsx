@@ -156,6 +156,61 @@ export const Login: React.FC = () => {
             </button>
           </form>
 
+          {/* Quick Login Section (Dev Only) */}
+          {import.meta.env.DEV && (
+            <div className="pt-4 border-t border-slate-800/80 space-y-3">
+              <h3 className="text-[10px] font-bold text-slate-400 uppercase tracking-wider text-center">
+                Quick Dev Logins (Click to Fill / Button to Login)
+              </h3>
+              <div className="grid grid-cols-2 gap-2">
+                {[
+                  { role: 'Admin', email: 'admin@transitops.com', pass: 'admin123' },
+                  { role: 'Fleet Manager', email: 'manager@transitops.com', pass: 'manager123' },
+                  { role: 'Driver', email: 'driver@transitops.com', pass: 'driver123' },
+                  { role: 'Safety Officer', email: 'safety@transitops.com', pass: 'safety123' },
+                  { role: 'Financial Analyst', email: 'analyst@transitops.com', pass: 'analyst123' }
+                ].map((u) => (
+                  <div
+                    key={u.role}
+                    onClick={() => {
+                      setEmail(u.email);
+                      setPassword(u.pass);
+                    }}
+                    className="flex flex-col p-2.5 rounded-xl border border-slate-800/80 bg-slate-950/40 hover:bg-slate-950/80 cursor-pointer text-left group transition duration-150"
+                  >
+                    <span className="text-[10px] font-bold text-slate-200 group-hover:text-rose-400 transition truncate">
+                      {u.role}
+                    </span>
+                    <span className="text-[8px] text-slate-500 truncate mb-1">
+                      {u.email}
+                    </span>
+                    <button
+                      type="button"
+                      onClick={async (e) => {
+                        e.stopPropagation();
+                        setEmail(u.email);
+                        setPassword(u.pass);
+                        setErrorMsg(null);
+                        setSubmitting(true);
+                        try {
+                          await login(u.email, u.pass);
+                          navigate('/', { replace: true });
+                        } catch (err: any) {
+                          setErrorMsg(err.message || 'Quick login failed');
+                        } finally {
+                          setSubmitting(false);
+                        }
+                      }}
+                      className="mt-1 w-full py-1 text-[8px] font-bold text-center text-white bg-slate-800 hover:bg-rose-600 rounded-lg cursor-pointer transition duration-150"
+                    >
+                      Login As
+                    </button>
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
+
           {/* Footer */}
           <div className="text-center pt-4 border-t border-slate-800/80 text-[10px] text-slate-500 uppercase tracking-widest font-bold">
             TransitOps Control Tower v1.0

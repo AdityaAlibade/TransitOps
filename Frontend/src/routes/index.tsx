@@ -9,6 +9,8 @@ import { Expenses } from '../pages/Expenses/Expenses';
 import { Reports } from '../pages/Reports/Reports';
 import { Login } from '../pages/Login/Login';
 import { ProtectedRoute } from '../components/ProtectedRoute/ProtectedRoute';
+import { AccessDenied } from '../pages/AccessDenied/AccessDenied';
+import { UserManagement } from '../pages/UserManagement/UserManagement';
 
 export const router = createBrowserRouter([
   {
@@ -49,6 +51,14 @@ export const router = createBrowserRouter([
           {
             path: 'reports',
             element: <Reports />
+          },
+          {
+            path: 'users',
+            element: <UserManagement />
+          },
+          {
+            path: '403',
+            element: <AccessDenied />
           }
         ]
       }
