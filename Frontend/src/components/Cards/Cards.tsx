@@ -46,10 +46,10 @@ export const KPICard: React.FC<KPICardProps> = ({
   const scheme = colorMap[color] || colorMap.blue;
 
   return (
-    <div className="flex items-center justify-between p-6 bg-slate-900/60 backdrop-blur-md border border-slate-800/80 rounded-3xl shadow-lg hover:shadow-xl hover:border-slate-700/80 transition-all duration-300">
+    <div className="flex items-center justify-between p-6 bg-white dark:bg-slate-900/60 backdrop-blur-md border border-slate-200 dark:border-slate-800/80 rounded-3xl shadow-lg hover:shadow-xl hover:border-slate-300 dark:hover:border-slate-700/80 transition-all duration-300">
       <div className="space-y-2">
-        <span className="text-[10px] font-bold uppercase tracking-wider text-slate-500">{title}</span>
-        <h3 className="text-3xl font-extrabold text-slate-100">{value}</h3>
+        <span className="text-[10px] font-bold uppercase tracking-wider text-slate-400 dark:text-slate-500">{title}</span>
+        <h3 className="text-3xl font-extrabold text-slate-800 dark:text-slate-100">{value}</h3>
         {change && (
           <div className="flex items-center space-x-1.5 text-xs font-semibold">
             {trend === 'up' ? (

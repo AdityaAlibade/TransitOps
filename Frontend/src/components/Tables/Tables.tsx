@@ -113,23 +113,22 @@ export const Table: React.FC<TableProps> = ({
   // Compute pagination text indices
   const startIndex = totalEntries === 0 ? 0 : (page - 1) * pageSize + 1;
   const endIndex = Math.min(page * pageSize, totalEntries);
-
   return (
-    <div className="w-full bg-slate-900/60 backdrop-blur-md border border-slate-800/80 rounded-3xl shadow-xl overflow-hidden">
+    <div className="w-full bg-white dark:bg-slate-900/60 backdrop-blur-md border border-slate-200 dark:border-slate-800/80 rounded-3xl shadow-xl overflow-hidden">
       <div className="overflow-x-auto">
         <table className="w-full text-left border-collapse">
           <thead>
-            <tr className="bg-slate-950/60 border-b border-slate-800">
+            <tr className="bg-slate-50 dark:bg-slate-950/60 border-b border-slate-200 dark:border-slate-800">
               {columns.map((col, idx) => (
                 <th 
                   key={idx} 
-                  className="px-6 py-4 text-xs font-bold uppercase tracking-wider text-slate-400"
+                  className="px-6 py-4 text-xs font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400"
                 >
                   {col.header}
                 </th>
               ))}
               {hasActions && (
-                <th className="px-6 py-4 text-xs font-bold uppercase tracking-wider text-slate-400 text-right">
+                <th className="px-6 py-4 text-xs font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400 text-right">
                   Actions
                 </th>
               )}
@@ -157,10 +156,10 @@ export const Table: React.FC<TableProps> = ({
               data.map((item, rowIdx) => (
                 <tr 
                   key={item.id || rowIdx} 
-                  className="border-b border-slate-800/60 hover:bg-slate-800/25 transition duration-150"
+                  className="border-b border-slate-200/60 dark:border-slate-800/60 hover:bg-slate-50 dark:hover:bg-slate-800/25 transition duration-150"
                 >
                   {columns.map((col, colIdx) => (
-                    <td key={colIdx} className="px-6 py-3.5 text-sm text-slate-300 font-medium">
+                    <td key={colIdx} className="px-6 py-3.5 text-sm text-slate-600 dark:text-slate-300 font-medium">
                       {renderCell(item, col)}
                     </td>
                   ))}
@@ -205,20 +204,20 @@ export const Table: React.FC<TableProps> = ({
       </div>
       
       {/* Pagination Controls */}
-      <div className="flex items-center justify-between px-6 py-4 border-t border-slate-800/80 bg-slate-900/40 text-slate-400">
-        <div className="text-sm text-slate-500">
-          Showing <span className="font-semibold text-slate-200">{startIndex}</span> to{' '}
-          <span className="font-semibold text-slate-200">{endIndex}</span> of{' '}
-          <span className="font-semibold text-slate-200">{totalEntries}</span> entries
+      <div className="flex items-center justify-between px-6 py-4 border-t border-slate-200 dark:border-slate-800/80 bg-slate-50 dark:bg-slate-900/40 text-slate-500 dark:text-slate-400">
+        <div className="text-sm text-slate-500 dark:text-slate-400">
+          Showing <span className="font-semibold text-slate-700 dark:text-slate-200">{startIndex}</span> to{' '}
+          <span className="font-semibold text-slate-700 dark:text-slate-200">{endIndex}</span> of{' '}
+          <span className="font-semibold text-slate-700 dark:text-slate-200">{totalEntries}</span> entries
         </div>
         <div className="flex space-x-2">
           <button 
             onClick={() => onPageChange?.(page - 1)}
             disabled={page <= 1 || loading}
-            className={`p-2 border border-slate-800 rounded-xl transition duration-150 ${
+            className={`p-2 border border-slate-200 dark:border-slate-800 rounded-xl transition duration-150 ${
               page <= 1 || loading
-                ? 'text-slate-500 bg-slate-950/40 border-slate-900/60 cursor-not-allowed'
-                : 'text-slate-300 bg-slate-955 hover:bg-slate-800 hover:text-white border-slate-700'
+                ? 'text-slate-350 dark:text-slate-500 bg-slate-100 dark:bg-slate-955/40 border-slate-200 dark:border-slate-900/60 cursor-not-allowed'
+                : 'text-slate-600 dark:text-slate-300 bg-white dark:bg-slate-900 hover:bg-slate-100 dark:hover:bg-slate-800 hover:text-slate-800 dark:hover:text-white border-slate-200 dark:border-slate-700'
             }`}
           >
             <FiChevronLeft className="w-5 h-5" />
@@ -226,10 +225,10 @@ export const Table: React.FC<TableProps> = ({
           <button 
             onClick={() => onPageChange?.(page + 1)}
             disabled={page >= totalPages || loading}
-            className={`p-2 border border-slate-800 rounded-xl transition duration-150 ${
+            className={`p-2 border border-slate-200 dark:border-slate-800 rounded-xl transition duration-150 ${
               page >= totalPages || loading
-                ? 'text-slate-500 bg-slate-955/40 border-slate-900/60 cursor-not-allowed'
-                : 'text-slate-300 bg-slate-955 hover:bg-slate-800 hover:text-white border-slate-700'
+                ? 'text-slate-350 dark:text-slate-500 bg-slate-100 dark:bg-slate-955/40 border-slate-200 dark:border-slate-900/60 cursor-not-allowed'
+                : 'text-slate-600 dark:text-slate-300 bg-white dark:bg-slate-900 hover:bg-slate-100 dark:hover:bg-slate-800 hover:text-slate-800 dark:hover:text-white border-slate-200 dark:border-slate-700'
             }`}
           >
             <FiChevronRight className="w-5 h-5" />
